@@ -3,9 +3,16 @@
 var http = require('http');
 var spawn = require('child_process').spawn;
 
+var argv = process.argv.slice(2);
 var name = '';
-if (process.argv.length > 2)
+
+if (argv.length > 0)
   name = process.cwd().split('/').reverse()[0];
+
+if (argv[0] == '-n') {
+  name = argv[1];
+  argv = argv.slice(2);
+}
 
 http.get('http://pult.dev/' + name, function httpResponse(res) {
   res.setEncoding('utf8');
@@ -21,5 +28,5 @@ http.get('http://pult.dev/' + name, function httpResponse(res) {
 
 function spawnWithPort(port) {
   process.env.PORT = port;
-  spawn(process.argv[2], process.argv.slice(3), { stdio: 'inherit' });
+  spawn(argv[0], argv.slice(1), { stdio: 'inherit' });
 }
