@@ -1,0 +1,27 @@
+{
+  "name":        "pult",
+  "version":     "0.1.0",
+  "description": "Access local servers on .dev domains",
+  "keywords": [
+    "local",
+    "server",
+    "proxy",
+    "dns"
+  ],
+  "author":   "Curtis McEnroe <curtis@cmcenroe.me> (http://cmcenroe.me)",
+  "license":  "ISC",
+  "homepage": "https://github.com/programble/pult",
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/programble/pult.git"
+  },
+  "bin": {
+    "pult":        "./pult.js",
+    "pult-server": "./pult-server.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "http-proxy": "1.x",
+    "native-dns": "0.4.x"
+  }
+}
