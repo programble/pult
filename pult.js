@@ -3,14 +3,19 @@
 var http = require('http');
 var spawn = require('child_process').spawn;
 
-var name = process.cwd().split('/').reverse()[0];
+var name = '';
+if (process.argv.length > 2)
+  name = process.cwd().split('/').reverse()[0];
 
 http.get('http://pult.dev/' + name, function httpResponse(res) {
   res.setEncoding('utf8');
   res.on('data', function httpResponseData(data) {
     var json = JSON.parse(data);
     for (var host in json)
-      spawnWithPort(json[host]);
+      if (name)
+        spawnWithPort(json[host]);
+      else
+        console.log(host + ' ' + json[host]);
   });
 });
 
