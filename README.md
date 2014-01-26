@@ -47,7 +47,7 @@ node-project $ pult node app               # available at http://my-project.dev/
   * Disadvantages:
     * OS X only
     * Rack-specific
-    * Requires symlinking
+    * Requires symlinking (explicit setup)
 
 ## License
 
