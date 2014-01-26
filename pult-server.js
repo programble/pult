@@ -30,7 +30,7 @@ dnsServer.on('request', function dnsRequest(req, res) {
         address: '127.0.0.1',
         ttl: 600
       }));
-    else
+    else if (type == 'AAAA')
       res.answer.push(dns.AAAA({
         name: name,
         address: '::1',
