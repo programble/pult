@@ -8,6 +8,7 @@ if (process.getuid() != 0) {
   return;
 }
 
+var fs = require('fs');
 var dns = require('native-dns');
 var http = require('http');
 var httpProxy = require('http-proxy');
@@ -40,6 +41,34 @@ dnsServer.on('socketError', function dnsSocketError(err, socket) {
 });
 
 dnsServer.serve(53);
+
+var resolvConfLine = 'nameserver 127.0.0.1';
+
+fs.readFile('/etc/resolv.conf', { encoding: 'utf8' },
+  function readResolvConf(err, data) {
+    if (err) throw err;
+    if (data.indexOf(resolvConfLine) == -1) {
+      console.log('adding ' + resolvConfLine + ' to /etc/resolv.conf');
+      fs.writeFile('/etc/resolv.conf', resolvConfLine + '\n' + data,
+        function writeResolvConf(err) { if (err) throw err; });
+    }
+});
+
+process.on('SIGINT', onExit);
+process.on('SIGTERM', onExit);
+function onExit() {
+  fs.readFile('/etc/resolv.conf', { encoding: 'utf8' }, function(err, data) {
+    if (err) throw err;
+    if (data.indexOf(resolvConfLine) == 0) {
+      console.log('removing ' + resolvConfLine + ' from /etc/resolv.conf');
+      fs.writeFile('/etc/resolv.conf', data.replace(resolvConfLine + '\n', ''),
+        function(err) {
+          if (err) throw err;
+          process.exit();
+        });
+    }
+  });
+}
 
 var proxyServer = httpProxy.createProxyServer({});
 
