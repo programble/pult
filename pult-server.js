@@ -110,6 +110,8 @@ function httpRequest(req, res) {
             resJSON(res, 502, err);
           });
       });
+  } else {
+    resJSON(res, 502, { host: host });
   }
 }
 
@@ -123,6 +125,8 @@ function httpUpgrade(req, socket, head) {
             resJSON(res, 502, err);
           });
       });
+  } else {
+    resJSON(res, 502, { host: req.headers.host });
   }
 }
 
