@@ -32,14 +32,6 @@ dnsServer.on('request', function dnsRequest(req, res) {
   res.send();
 });
 
-dnsServer.on('socketError', function dnsSocketError(err, socket) {
-  if (err.code == 'EACCES') {
-    console.log('cannot bind DNS server to port 53');
-    console.log('please run as root');
-    process.exit(1);
-  }
-});
-
 dnsServer.serve(53);
 
 var resolvConfLine = 'nameserver 127.0.0.1';
