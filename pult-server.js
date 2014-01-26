@@ -65,7 +65,8 @@ function onExit() {
 var proxyServer = httpProxy.createProxyServer({});
 
 proxyServer.on('error', function proxyError(err, req, res) {
-  res.writeHead(502);
+  res.writeHead(502, { 'Content-Type': 'application/json' });
+  res.write(JSON.stringify(err));
   res.end();
 });
 
