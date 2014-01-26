@@ -65,14 +65,16 @@ ruby-project.dev 7001
 2. `pult-server` starts a DNS server
 3. `pult-server` adds itself to `/etc/resolv.conf`
 4. `pult-server` starts an HTTP server
-5. `pult` requests port for current working directory
+5. `pult` requests a port for the application
   1. `pult-server` finds or assigns a new port for the domain
-  2. `pult-server` begins responding to DNS requests for the domain
+  2. `pult-server` begins responding to DNS queries for the domain
   3. `pult-server` begins reverse-proxying HTTP for the domain to the
      port
   4. `pult-server` returns the port to `pult`
 6. `pult` sets the `PORT` environment variable
 7. `pult` spawns `node app`
+
+Pult assigns ports sequentially starting from 7000.
 
 ## Similar projects
 
