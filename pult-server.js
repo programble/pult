@@ -18,12 +18,18 @@ var ports = {
   'pult.dev': 80
 };
 
+function getPort(host) {
+  while (!ports[host] && host.indexOf('.') != -1)
+    host = host.slice(host.indexOf('.') + 1);
+  return ports[host];
+}
+
 var dnsServer = dns.createServer();
 
 dnsServer.on('request', function dnsRequest(req, res) {
   var name = req.question[0].name;
   var type = dns.consts.QTYPE_TO_NAME[req.question[0].type];
-  if (ports[name]) {
+  if (getPort(name)) {
     if (type == 'A')
       res.answer.push(dns.A({
         name: name,
@@ -80,7 +86,7 @@ function resJSON(res, code, obj) {
 
 function httpRequest(req, res) {
   var host = req.headers.host;
-  var port = ports[host];
+  var port = getPort(host);
 
   if (host == 'pult.dev') {
     if (req.method != 'GET')
@@ -108,7 +114,7 @@ function httpRequest(req, res) {
 }
 
 function httpUpgrade(req, socket, head) {
-  var port = ports[req.headers.host];
+  var port = getPort(req.headers.host);
   if (port) {
     proxy.ws(req, socket, head, { target: 'ws://[::1]:' + port },
       function proxyWsError6(err) {
