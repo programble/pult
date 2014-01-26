@@ -10,7 +10,7 @@ npm install -g pult
 
 ## How do I use it?
 
-```
+```sh
 ~ $ pult-server
 node-project $ pult node app # available at http://node-project.dev
 ruby-project $ pult rackup   # available at http://ruby-project.dev
@@ -22,14 +22,14 @@ By default, Pult uses the name of the current directory to determine
 what `.dev` domain to serve from. You can specify a different domain
 using the `-n` option:
 
-```
+```sh
 node-project $ pult -n my-project node app # available at http://my-project.dev
 ```
 
 You can also set the domain in the `.pult` file of the current
 directory:
 
-```
+```sh
 node-project $ echo 'my-project' > .pult
 node-project $ pult node app # available at http://my-project.dev
 ```
@@ -44,7 +44,7 @@ domain. For example, `node-project` will be available at
 Pult also allows you to serve different applications on subdomains
 simply by specifying the subdomain with `-n` or in the `.pult` file:
 
-```
+```sh
 other-project $ pult -n other.node-project node app # available at http://other.node-project.dev
 ```
 
@@ -53,7 +53,7 @@ other-project $ pult -n other.node-project node app # available at http://other.
 To find out which domains are being forwarded to which ports, simply run
 `pult` with no arguments:
 
-```
+```sh
 ~ $ pult
 pult.dev 80
 node-project.dev 7000
