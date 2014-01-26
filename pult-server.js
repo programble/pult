@@ -72,46 +72,52 @@ function onExit() {
 
 var proxy = httpProxy.createProxyServer({});
 
+function resJSON(res, code, obj) {
+  res.writeHead(code, { 'Content-Type': 'application/json' });
+  res.write(JSON.stringify(obj));
+  res.end();
+}
+
 function httpRequest(req, res) {
   var host = req.headers.host;
+  var port = ports[host];
 
   if (host == 'pult.dev') {
-    if (req.method != 'GET') {
-      res.writeHead(400);
-      return res.end();
-    }
+    if (req.method != 'GET')
+      return resJSON(res, 400, { method: req.method });
 
     var name = req.url.slice(1);
 
     if (name) {
       name += '.dev';
-
-      var port = {};
+      port = {};
       port[name] = ports[name] || (ports[name] = nextPort++);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.write(JSON.stringify(port));
-      res.end();
+      resJSON(res, 200, port);
     } else {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.write(JSON.stringify(ports));
-      res.end();
+      resJSON(res, 200, ports);
     }
-  } else if (ports[host]) {
-    proxy.web(req, res, { target: 'http://[::1]:' + ports[host] },
-      function proxyError6(err) {
-        proxy.web(req, res, { target: 'http://127.0.0.1:' + ports[host] },
-          function proxyError4(err) {
-            res.writeHead(502, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(err));
-            res.end();
+  } else if (port) {
+    proxy.web(req, res, { target: 'http://[::1]:' + port },
+      function proxyWebError6(err) {
+        proxy.web(req, res, { target: 'http://127.0.0.1:' + port },
+          function proxyWebError4(err) {
+            resJSON(res, 502, err);
           });
       });
   }
 }
 
 function httpUpgrade(req, socket, head) {
-  proxy.ws(req, socket, head);
+  var port = ports[req.headers.host];
+  if (port) {
+    proxy.ws(req, socket, head, { target: 'ws://[::1]:' + port },
+      function proxyWsError6(err) {
+        proxy.ws(req, socket, head, { target: 'ws://127.0.0.1:' + port },
+          function proxyWsError4(err) {
+            resJSON(res, 502, err);
+          });
+      });
+  }
 }
 
 var httpServer4 = http.createServer();
