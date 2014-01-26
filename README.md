@@ -38,14 +38,13 @@ node-project $ pult node app # available at http://my-project.dev
 
 Pult also serves the same application on all subdomains of its `.dev`
 domain. For example, `node-project` will be available at
-`http://node-project.dev`, `http://www.node-project.dev`,
-`http://assets.node-project.dev`, etc.
+`http://node-project.dev`, `http://www.node-project.dev`, etc.
 
 Pult also allows you to serve different applications on subdomains
 simply by specifying the subdomain with `-n` or in the `.pult` file:
 
 ```sh
-other-project $ pult -n other.node-project node app # available at http://other.node-project.dev
+other-project $ pult -n other.project node app # available at http://other.project.dev
 ```
 
 ### Status
