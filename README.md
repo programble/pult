@@ -68,6 +68,8 @@ other-project $ pult -n other.node-project node app # available at http://other.
 * [Pow](http://pow.cx/)
   * Advantages:
     * Runs as regular user
+    * Allows serving the same application from multiple domains (not
+      just subdomains)
   * Disadvantages:
     * OS X only
     * Rack-specific
