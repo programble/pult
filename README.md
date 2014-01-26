@@ -1,4 +1,4 @@
-# Pult
+# Pult [![NPM version](https://badge.fury.io/js/pult.png)](http://badge.fury.io/js/pult)
 
 Access local servers on .dev domains.
 
