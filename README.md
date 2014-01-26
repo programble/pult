@@ -5,9 +5,15 @@ Access local servers on .dev domains.
 ## How do I use it?
 
 ```
-~ # pult-server
+~ $ pult-server
 node-project $ pult node app # available at http://node-project.dev/
 ruby-project $ pult rackup   # available at http://ruby-project.dev/
+```
+
+## How do I get it?
+
+```
+npm install -g pult
 ```
 
 ## How does it work?
