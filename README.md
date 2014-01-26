@@ -2,26 +2,50 @@
 
 Access local servers on .dev domains.
 
-## How do I use it?
-
-```
-~ $ pult-server
-node-project $ pult node app # available at http://node-project.dev/
-ruby-project $ pult rackup   # available at http://ruby-project.dev/
-```
-
 ## How do I get it?
 
 ```
 npm install -g pult
 ```
 
-## How do I use it even more?
+## How do I use it?
 
 ```
-node-project $ pult -n my-project node app # available at http://my-project.dev/
-node-project $ echo "my-project" > .pult
-node-project $ pult node app               # available at http://my-project.dev/
+~ $ pult-server
+node-project $ pult node app # available at http://node-project.dev
+ruby-project $ pult rackup   # available at http://ruby-project.dev
+```
+
+### Custom domains
+
+By default, Pult uses the name of the current directory to determine
+what `.dev` domain to serve from. You can specify a different domain
+using the `-n` option:
+
+```
+node-project $ pult -n my-project node app # available at http://my-project.dev
+```
+
+You can also set the domain in the `.pult` file of the current
+directory:
+
+```
+node-project $ echo 'my-project' > .pult
+node-project $ pult node app # available at http://my-project.dev
+```
+
+### Subdomains
+
+Pult also serves the same application on all subdomains of its `.dev`
+domain. For example, `node-project` will be available at
+`http://node-project.dev`, `http://www.node-project.dev`,
+`http://assets.node-project.dev`, etc.
+
+Pult also allows you to serve different applications on subdomains
+simply by specifying the subdomain with `-n` or in the `.pult` file:
+
+```
+other-project $ pult -n other.node-project node app # available at http://other.node-project.dev
 ```
 
 ## How does it work?
