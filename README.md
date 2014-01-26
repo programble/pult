@@ -16,16 +16,28 @@ ruby-project $ pult rackup   # available at http://ruby-project.dev/
 npm install -g pult
 ```
 
+## How do I use it even more?
+
+```
+node-project $ pult -n my-project node app # available at http://my-project.dev/
+node-project $ echo "my-project" > .pult
+node-project $ pult node app               # available at http://my-project.dev/
+```
+
 ## How does it work?
 
-1. `pult` requests port for current working directory
+1. `pult-server` spawns itself with `sudo`
+2. `pult-server` starts a DNS server
+3. `pult-server` adds itself to `/etc/resolv.conf`
+4. `pult-server` starts an HTTP server
+5. `pult` requests port for current working directory
   1. `pult-server` finds or assigns a new port for the domain
   2. `pult-server` begins responding to DNS requests for the domain
   3. `pult-server` begins reverse-proxying HTTP for the domain to the
      port
   4. `pult-server` returns the port to `pult`
-2. `pult` sets the `PORT` environment variable
-3. `pult` spawns `node app`
+6. `pult` sets the `PORT` environment variable
+7. `pult` spawns `node app`
 
 ## License
 
