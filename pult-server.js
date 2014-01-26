@@ -22,12 +22,20 @@ var dnsServer = dns.createServer();
 
 dnsServer.on('request', function dnsRequest(req, res) {
   var name = req.question[0].name;
+  var type = dns.consts.QTYPE_TO_NAME[req.question[0].type];
   if (ports[name]) {
-    res.answer.push(dns.A({
-      name: name,
-      address: '127.0.0.1',
-      ttl: 600
-    }));
+    if (type == 'A')
+      res.answer.push(dns.A({
+        name: name,
+        address: '127.0.0.1',
+        ttl: 600
+      }));
+    else
+      res.answer.push(dns.AAAA({
+        name: name,
+        address: '::1',
+        ttl: 600
+      }));
   }
   res.send();
 });
@@ -62,15 +70,9 @@ function onExit() {
   });
 }
 
-var proxyServer = httpProxy.createProxyServer({});
+var proxy = httpProxy.createProxyServer({});
 
-proxyServer.on('error', function proxyError(err, req, res) {
-  res.writeHead(502, { 'Content-Type': 'application/json' });
-  res.write(JSON.stringify(err));
-  res.end();
-});
-
-var httpServer = http.createServer(function httpRequest(req, res) {
+function httpRequest(req, res) {
   var host = req.headers.host;
 
   if (host == 'pult.dev') {
@@ -96,12 +98,28 @@ var httpServer = http.createServer(function httpRequest(req, res) {
       res.end();
     }
   } else if (ports[host]) {
-    proxyServer.web(req, res, { target: 'http://127.0.0.1:' + ports[host] });
+    proxy.web(req, res, { target: 'http://[::1]:' + ports[host] },
+      function proxyError6(err) {
+        proxy.web(req, res, { target: 'http://127.0.0.1:' + ports[host] },
+          function proxyError4(err) {
+            res.writeHead(502, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(err));
+            res.end();
+          });
+      });
   }
-});
+}
 
-httpServer.on('upgrade', function httpUpgrade(req, socket, head) {
-  proxyServer.ws(req, socket, head);
-});
+function httpUpgrade(req, socket, head) {
+  proxy.ws(req, socket, head);
+}
 
-httpServer.listen(80);
+var httpServer4 = http.createServer();
+var httpServer6 = http.createServer();
+httpServer4.on('request', httpRequest);
+httpServer6.on('request', httpRequest);
+httpServer4.on('upgrade', httpUpgrade);
+httpServer6.on('upgrade', httpUpgrade);
+
+httpServer4.listen(80, '127.0.0.1');
+httpServer6.listen(80, '::1');
