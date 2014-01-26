@@ -39,6 +39,16 @@ node-project $ pult node app               # available at http://my-project.dev/
 6. `pult` sets the `PORT` environment variable
 7. `pult` spawns `node app`
 
+## Similar projects
+
+* [Pow](http://pow.cx/)
+  * Advantages:
+    * Runs as regular user
+  * Disadvantages:
+    * OS X only
+    * Rack-specific
+    * Requires symlinking
+
 ## License
 
 Copyright © 2014, Curtis McEnroe <programble@gmail.com>
