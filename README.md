@@ -48,6 +48,18 @@ simply by specifying the subdomain with `-n` or in the `.pult` file:
 other-project $ pult -n other.node-project node app # available at http://other.node-project.dev
 ```
 
+### Status
+
+To find out which domains are being forwarded to which ports, simply run
+`pult` with no arguments:
+
+```
+~ $ pult
+pult.dev 80
+node-project.dev 7000
+ruby-project.dev 7001
+```
+
 ## How does it work?
 
 1. `pult-server` spawns itself with `sudo`
