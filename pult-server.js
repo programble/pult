@@ -1,5 +1,13 @@
 #!/usr/bin/env node
 
+if (process.getuid() != 0) {
+  console.log('spawning with sudo...');
+  var args = process.argv.slice(1);
+  args.unshift(process.execPath);
+  require('child_process').spawn('sudo', args, { stdio: 'inherit' });
+  return;
+}
+
 var dns = require('native-dns');
 var http = require('http');
 var httpProxy = require('http-proxy');
