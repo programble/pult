@@ -85,6 +85,7 @@ ruby-project.dev 7001
     * OS X only
     * Rack-specific
     * Requires symlinking (explicit setup)
+    * Takes over control of your server processes
 
 ## License
 
