@@ -129,12 +129,9 @@ function httpRequest(req, res) {
       resJSON(res, 200, ports);
     }
   } else if (port) {
-    proxy.web(req, res, { target: 'http://[::1]:' + port },
-      function proxyWebError6(err) {
-        proxy.web(req, res, { target: 'http://127.0.0.1:' + port },
-          function proxyWebError4(err) {
-            resJSON(res, 502, err);
-          });
+    proxy.web(req, res, { target: 'http://127.0.0.1:' + port },
+      function proxyWebError4(err) {
+        resJSON(res, 502, err);
       });
   } else {
     resJSON(res, 502, { host: host });
@@ -144,12 +141,9 @@ function httpRequest(req, res) {
 function httpUpgrade(req, socket, head) {
   var port = getPort(req.headers.host);
   if (port) {
-    proxy.ws(req, socket, head, { target: 'ws://[::1]:' + port },
-      function proxyWsError6(err) {
-        proxy.ws(req, socket, head, { target: 'ws://127.0.0.1:' + port },
-          function proxyWsError4(err) {
-            resJSON(res, 502, err);
-          });
+    proxy.ws(req, socket, head, { target: 'ws://127.0.0.1:' + port },
+      function proxyWsError4(err) {
+        resJSON(res, 502, err);
       });
   } else {
     resJSON(res, 502, { host: req.headers.host });
