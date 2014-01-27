@@ -116,7 +116,7 @@ Pult has been tested on:
 
 * Ubuntu 13.10
 * Mac OS X 10.9.1
-* Arch Linux
+* Arch Linux (2014-01-26)
 
 ## License
 
