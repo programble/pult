@@ -16,6 +16,9 @@ node-project $ pult node app # available at http://node-project.dev
 ruby-project $ pult rackup   # available at http://ruby-project.dev
 ```
 
+Pult works by setting the `PORT` environment variable, so it can be used
+to start any server process that reads `PORT`.
+
 ### Custom domains
 
 By default, Pult uses the name of the current directory to determine
@@ -88,6 +91,14 @@ Pult assigns ports sequentially starting from 7000.
     * Rack-specific
     * Requires symlinking (explicit setup)
     * Takes over control of your server processes
+
+## Compatibility
+
+Pult has been tested on:
+
+* Ubuntu 13.10
+* Mac OS X 10.9.1
+* Arch Linux
 
 ## License
 
