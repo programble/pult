@@ -62,6 +62,24 @@ node-project.dev 7000
 ruby-project.dev 7001
 ```
 
+### Server
+
+By default, `pult-server` spawns itself with sudo then forks to the
+background. To run `pult-server` as a foreground process, pass the `-f`
+option:
+
+```sh
+~ $ pult-server -f
+```
+
+To stop `pult-server` while it is running in the background, pass the
+`-k` option to `pult`:
+
+```sh
+~ $ pult-server
+~ $ pult -k
+```
+
 ## How does it work?
 
 1. `pult-server` spawns itself with `sudo`
