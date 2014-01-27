@@ -111,6 +111,10 @@ function httpRequest(req, res) {
   var port = getPort(host);
 
   if (host == 'pult.dev') {
+    if (req.method == 'DELETE' && req.url == '/') {
+      resJSON(res, 200, ports);
+      return onExit();
+    }
     if (req.method != 'GET')
       return resJSON(res, 400, { method: req.method });
 
