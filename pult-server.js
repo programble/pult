@@ -75,6 +75,7 @@ function onExit() {
   if (os.platform() == 'darwin') {
     console.log('removing /etc/resolver/dev');
     fs.unlink('/etc/resolver/dev', function(err) {});
+    process.exit();
   } else {
     fs.readFile('/etc/resolv.conf', { encoding: 'utf8' }, function(err, data) {
       if (err) throw err;
