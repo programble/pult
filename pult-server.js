@@ -108,6 +108,7 @@ function resJSON(res, code, obj) {
 
 function httpRequest(req, res) {
   var host = req.headers.host;
+  host = host.split(':')[0]; // Ignore port
   var port = getPort(host);
 
   if (host == 'pult.dev') {
