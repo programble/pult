@@ -8,6 +8,13 @@ if (process.getuid() != 0) {
   return;
 }
 
+if (process.argv[2] != '-f') {
+  console.log('forking to background...');
+  require('child_process').spawn(process.execPath, [process.argv[1], '-f'],
+    { stdio: 'ignore', detached: true }).unref();
+  return;
+}
+
 var os = require('os');
 var fs = require('fs');
 var dns = require('native-dns');
