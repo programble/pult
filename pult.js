@@ -5,6 +5,10 @@ var http = require('http');
 var spawn = require('child_process').spawn;
 
 var argv = process.argv.slice(2);
+
+if (argv[0] == '-k')
+  return http.request({ hostname: 'pult.dev', method: 'DELETE' }).end();
+
 var name = '';
 
 if (argv.length > 0)
