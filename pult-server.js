@@ -21,7 +21,7 @@ var dns = require('native-dns');
 var http = require('http');
 var httpProxy = require('http-proxy');
 
-var nextPort = 7000;
+var nextPort = 7001;
 var ports = {
   'pult.dev': 80
 };
