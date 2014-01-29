@@ -6,43 +6,59 @@ var spawn = require('child_process').spawn;
 
 var argv = process.argv.slice(2);
 
-if (argv[0] == '-k')
-  return http.request({ hostname: 'pult.dev', method: 'DELETE' }).end();
+var name = '', method = 'PORT';
 
-var name = '';
-
-if (argv.length > 0)
-  name = process.cwd().split('/').reverse()[0];
-
-function parseArgv() {
-  if (argv[0] == '-n') {
+while (argv[0] && argv[0][0] == '-') {
+  switch (argv[0]) {
+  case '-k':
+    return http.request({ hostname: 'pult.dev', method: 'DELETE' },
+      function httpDelete(res) {
+        process.exit();
+      }).end();
+  case '-n':
     name = argv[1];
     argv = argv.slice(2);
+    break;
+  case '-p':
+  case '-P':
+    method = argv.shift();
+    break;
+  default:
+    console.log('unknown option ' + argv[0]);
+    process.exit(1);
   }
 }
 
-fs.readFile('.pult', { encoding: 'utf8' }, function readDotPult(err, data) {
-  if (!err && argv.length > 0)
-    name = data.trim();
-  parseArgv();
+if (!name && argv.length > 0) {
+  fs.readFile('.pult', { encoding: 'utf8' }, function readDotPult(err, data) {
+    if (!err)
+      name = data.trim();
+    else
+      name = process.cwd().split('/').reverse()[0];
+    getPort();
+  });
+} else {
   getPort();
-});
+}
 
 function getPort() {
-  http.get('http://pult.dev/' + name, function httpResponse(res) {
+  http.get('http://pult.dev/' + name, function httpGet(res) {
     res.setEncoding('utf8');
-    res.on('data', function httpResponseData(data) {
-      var json = JSON.parse(data);
-      for (var host in json)
+    res.on('data', function httpGetData(data) {
+      var ports = JSON.parse(data);
+      for (var host in ports)
         if (name)
-          spawnWithPort(json[host]);
+          spawnWithPort(ports[host]);
         else
-          console.log(host + ' ' + json[host]);
+          console.log(host + ' ' + ports[host]);
     });
   });
 }
 
 function spawnWithPort(port) {
-  process.env.PORT = port;
+  if (method == 'PORT')
+    process.env.PORT = port;
+  else
+    argv.push(method, port);
   spawn(argv[0], argv.slice(1), { stdio: 'inherit' });
 }
