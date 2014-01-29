@@ -38,13 +38,13 @@ dnsServer.on('request', function dnsRequest(req, res) {
   var name = req.question[0].name;
   var type = dns.consts.QTYPE_TO_NAME[req.question[0].type];
   if (getPort(name)) {
-    if (type == 'A')
+    if (type == 'A' || type == 'ANY')
       res.answer.push(dns.A({
         name: name,
         address: '127.0.0.1',
         ttl: 600
       }));
-    else if (type == 'AAAA')
+    if (type == 'AAAA' || type == 'ANY')
       res.answer.push(dns.AAAA({
         name: name,
         address: '::1',
