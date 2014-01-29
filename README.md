@@ -64,8 +64,8 @@ To find out which domains are being forwarded to which ports, simply run
 ```sh
 ~ $ pult
 pult.dev 80
-node-project.dev 7000
-ruby-project.dev 7001
+node-project.dev 7001
+ruby-project.dev 7002
 ```
 
 ### Server
