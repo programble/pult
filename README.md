@@ -101,7 +101,7 @@ To stop `pult-server` while it is running in the background, pass the
 6. `pult` sets the `PORT` environment variable
 7. `pult` spawns `node app`
 
-Pult assigns ports sequentially starting from 7000.
+Pult assigns ports sequentially starting from 7001.
 
 ## Similar projects
 
