@@ -16,8 +16,14 @@ node-project $ pult node app # available at http://node-project.dev
 ruby-project $ pult rackup   # available at http://ruby-project.dev
 ```
 
-Pult works by setting the `PORT` environment variable, so it can be used
-to start any server process that reads `PORT`.
+By default, Pult sets the `PORT` environment variable then spawns your
+server process. If your server process takes a port using the `-p` or
+`-P` options rather than through `PORT`, simply pass the required option
+to Pult:
+
+```sh
+website $ pult -P jekyll serve
+```
 
 ### Custom domains
 
