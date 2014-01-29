@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.1 (2014-01-29)
+
+* Respond with `A` and `AAAA` if DNS question type is `ANY`
+
 ## 0.4.0 (2014-01-28)
 
 * Add `-p` and `-P` options
