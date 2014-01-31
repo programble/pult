@@ -25,9 +25,9 @@ var dns = require('native-dns');
 var http = require('http');
 var httpProxy = require('http-proxy');
 
-var nextPort = 7001;
 var ports = {
-  'pult.dev': 80
+  'pult.dev': 80,
+  next: 7001
 };
 
 function getPort(host) {
@@ -128,7 +128,7 @@ function httpRequest(req, res) {
     if (name) {
       name += '.dev';
       port = {};
-      port[name] = ports[name] || (ports[name] = nextPort++);
+      port[name] = ports[name] || (ports[name] = ports.next++);
       resJSON(res, 200, port);
     } else {
       resJSON(res, 200, ports);
