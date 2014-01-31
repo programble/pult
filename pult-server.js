@@ -2,6 +2,7 @@
 
 if (process.getuid() != 0) {
   console.log('spawning with sudo...');
+
   var args = process.argv.slice(1);
   args.unshift(process.execPath);
   require('child_process').spawn('sudo', args, { stdio: 'inherit' });
@@ -10,7 +11,10 @@ if (process.getuid() != 0) {
 
 if (process.argv[2] != '-f') {
   console.log('forking to background...');
-  require('child_process').spawn(process.execPath, [process.argv[1], '-f'],
+
+  var args = process.argv.slice(1);
+  args.splice(1, 0, '-f');
+  require('child_process').spawn(process.execPath, args,
     { stdio: 'ignore', detached: true }).unref();
   return;
 }
