@@ -1,29 +1,29 @@
 #!/usr/bin/env node
 
-if (process.getuid() != 0) {
-  console.log('spawning with sudo...');
-
-  var args = process.argv.slice(1);
-  args.unshift(process.execPath);
-  require('child_process').spawn('sudo', args, { stdio: 'inherit' });
-  return;
-}
-
-if (process.argv[2] != '-f') {
-  console.log('forking to background...');
-
-  var args = process.argv.slice(1);
-  args.splice(1, 0, '-f');
-  require('child_process').spawn(process.execPath, args,
-    { stdio: 'ignore', detached: true }).unref();
-  return;
-}
-
+var spawn = require('child_process').spawn;
 var os = require('os');
 var fs = require('fs');
 var dns = require('native-dns');
 var http = require('http');
 var httpProxy = require('http-proxy');
+
+if (process.getuid() != 0) {
+  console.log('spawning with sudo...');
+
+  var args = process.argv.slice(1);
+  args.unshift(process.execPath);
+  spawn('sudo', args, { stdio: 'inherit' });
+  return;
+}
+
+if (process.argv.indexOf('-f') == -1) {
+  console.log('forking to background...');
+
+  var args = process.argv.slice(1);
+  args.splice(1, 0, '-f');
+  spawn(process.execPath, args, { stdio: 'ignore', detached: true }).unref();
+  return;
+}
 
 var ports = {
   'pult.dev': 80,
