@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.0 (2014-02-01)
+
+* Remove IPv6 listening from `pult-server`
+* List next port to assign in `GET /` response
+* Add `pult-server` `-p` and `-l` options
+
 ## 0.4.1 (2014-01-29)
 
 * Respond with `A` and `AAAA` if DNS question type is `ANY`
