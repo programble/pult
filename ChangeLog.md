@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.1 (2014-02-02)
+
+* Respond with `NOTIMP` to unsupported DNS queries
+
 ## 0.5.0 (2014-02-01)
 
 * Remove IPv6 listening from `pult-server`
