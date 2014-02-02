@@ -62,13 +62,14 @@ var dnsServer = dns.createServer();
 dnsServer.on('request', function dnsRequest(req, res) {
   var name = req.question[0].name;
   var type = dns.consts.QTYPE_TO_NAME[req.question[0].type];
-  if (getPort(name)) {
-    if (type == 'A' || type == 'ANY')
-      res.answer.push(dns.A({
-        name: name,
-        address: listenHost,
-        ttl: 600
-      }));
+  if (getPort(name) && (type == 'A' || type == 'ANY')) {
+    res.answer.push(dns.A({
+      name: name,
+      address: listenHost,
+      ttl: 600
+    }));
+  } else {
+    res.header.rcode = dns.consts.NAME_TO_RCODE.NOTIMP;
   }
   res.send();
 });
