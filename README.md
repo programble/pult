@@ -64,6 +64,7 @@ To find out which domains are being forwarded to which ports, simply run
 ```sh
 ~ $ pult
 pult.dev 80
+next 7003
 node-project.dev 7001
 ruby-project.dev 7002
 ```
@@ -84,6 +85,26 @@ To stop `pult-server` while it is running in the background, pass the
 ```sh
 ~ $ pult-server
 ~ $ pult -k
+```
+
+The default first port that `pult-server` assigns is 7001. To change
+this port, pass the `-p` option:
+
+```sh
+~ $ pult-server -p 8081
+~ $ pult
+pult.dev 80
+next 8081
+```
+
+By default, `pult-server` binds to ports 53 (DNS) and 80 (HTTP) on
+`127.0.0.1` (IPv4 localhost). If you are already running these services
+on `127.0.0.1` and are using a system that allows the use of the entire
+`127.0.0.0/8` range, you can pass the `-l` option to change which host
+`pult-server` binds to:
+
+```sh
+~ $ pult-server -l 127.1.1.1
 ```
 
 ## How does it work?
