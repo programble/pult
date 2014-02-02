@@ -25,9 +25,30 @@ if (process.argv.indexOf('-f') == -1) {
   return;
 }
 
+var listenHost = '127.0.0.1';
+var firstPort = 7001;
+
+var argv = process.argv.slice(2);
+while (argv[0]) {
+  var arg = argv.shift();
+  switch (arg) {
+  case '-p':
+    firstPort = argv.shift();
+    break;
+  case '-l':
+    listenHost = argv.shift();
+    break;
+  case '-f':
+    break;
+  default:
+    console.log('unknown option ' + arg);
+    process.exit(1);
+  }
+}
+
 var ports = {
   'pult.dev': 80,
-  next: 7001
+  next: firstPort
 };
 
 function getPort(host) {
@@ -45,22 +66,16 @@ dnsServer.on('request', function dnsRequest(req, res) {
     if (type == 'A' || type == 'ANY')
       res.answer.push(dns.A({
         name: name,
-        address: '127.0.0.1',
-        ttl: 600
-      }));
-    if (type == 'AAAA' || type == 'ANY')
-      res.answer.push(dns.AAAA({
-        name: name,
-        address: '::1',
+        address: listenHost,
         ttl: 600
       }));
   }
   res.send();
 });
 
-dnsServer.serve(53);
+dnsServer.serve(53, listenHost);
 
-var resolvConfLine = 'nameserver 127.0.0.1';
+var resolvConfLine = 'nameserver ' + listenHost;
 
 if (os.platform() == 'darwin') {
   fs.mkdir('/etc/resolver', function mkdirResolver(err) {
@@ -155,12 +170,7 @@ function httpUpgrade(req, socket, head) {
   }
 }
 
-var httpServer4 = http.createServer();
-var httpServer6 = http.createServer();
-httpServer4.on('request', httpRequest);
-httpServer6.on('request', httpRequest);
-httpServer4.on('upgrade', httpUpgrade);
-httpServer6.on('upgrade', httpUpgrade);
-
-httpServer4.listen(80, '127.0.0.1');
-httpServer6.listen(80, '::1');
+var httpServer = http.createServer();
+httpServer.on('request', httpRequest);
+httpServer.on('upgrade', httpUpgrade);
+httpServer.listen(80, listenHost);
