@@ -43,6 +43,11 @@ if (!name && argv.length > 0) {
 
 function getPort() {
   http.get('http://pult.dev/' + name, function httpGet(res) {
+    var package = require('./package.json');
+    if (res.headers['x-pult-version'] != package.version)
+      console.log('warning: pult-server has different version: ' +
+        res.headers['x-pult-version'] + ' != ' + package.version);
+
     res.setEncoding('utf8');
     res.on('data', function httpGetData(data) {
       var ports = JSON.parse(data);
