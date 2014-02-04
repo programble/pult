@@ -156,7 +156,18 @@ function httpRequest(req, res) {
       port[name] = ports[name] || (ports[name] = ports.next++);
       resJSON(res, 200, port);
     } else {
-      resJSON(res, 200, ports);
+      console.log(req.headers.accept);
+      if (req.headers.accept && req.headers.accept.indexOf('text/html') == 0) {
+        fs.readFile(__dirname + '/status.html', { encoding: 'utf8' },
+          function readHtml(err, data) {
+            if (err) return resJSON(res, 500, err);
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
+          });
+      } else {
+        resJSON(res, 200, ports);
+      }
     }
   } else if (port) {
     proxy.web(req, res, { target: 'http://127.0.0.1:' + port },

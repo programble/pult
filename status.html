@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pult</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+  </head>
+  <body style="padding-top: 25px; padding-bottom: 25px;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h1 class="panel-title">
+                Pult
+                <span id="version" class="pull-right label label-info"></span>
+              </h1>
+            </div>
+            <div id="domains" class="list-group">
+            </div>
+            <div class="panel-footer">
+              <strong>next</strong>
+              <span id="next" class="badge pull-right">7001</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script>
+      $(function refresh() {
+        $.getJSON('/', function(data, textStatus, jqXHR) {
+          $('#version').text(jqXHR.getResponseHeader('X-Pult-Version'));
+          $('#domains').empty();
+          for (var key in data) {
+            if (key == 'pult.dev') {
+              continue;
+            } else if (key == 'next') {
+              $('#next').text(data.next);
+            } else {
+              $('<a>')
+                .addClass('list-group-item')
+                .attr('href', 'http://' + key)
+                .append($('<strong>').text(key))
+                .append($('<span>').addClass('badge').text(data[key]))
+                .appendTo('#domains');
+            }
+          }
+        });
+        setTimeout(refresh, 3000);
+      });
+    </script>
+  </body>
+</html>
