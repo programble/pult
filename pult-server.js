@@ -113,6 +113,8 @@ function onExit() {
             if (err) throw err;
             process.exit();
           });
+      } else {
+        process.exit();
       }
     });
   }
