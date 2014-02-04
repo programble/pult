@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.0 (2014-02-03)
+
+* Warn if `pult` and `pult-server` are different versions
+* Exit `pult-server` even if nameserver line not in `/etc/resolv.conf`
+
 ## 0.5.1 (2014-02-02)
 
 * Respond with `NOTIMP` to unsupported DNS queries
