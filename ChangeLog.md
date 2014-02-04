@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.0 (2014-02-04)
+
+* Add HTML status page on http://pult.dev/
+* Blacklist `favicon.ico` from becoming a domain
+
 ## 0.6.0 (2014-02-03)
 
 * Warn if `pult` and `pult-server` are different versions
