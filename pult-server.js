@@ -145,6 +145,9 @@ function httpRequest(req, res) {
     if (req.method != 'GET')
       return resJSON(res, 400, { method: req.method });
 
+    if (req.url == '/favicon.ico')
+      return resJSON(res, 404, { url: req.url });
+
     var name = req.url.slice(1);
 
     if (name) {
