@@ -123,7 +123,11 @@ function onExit() {
 var proxy = httpProxy.createProxyServer({});
 
 function resJSON(res, code, obj) {
-  res.writeHead(code, { 'Content-Type': 'application/json' });
+  var package = require('./package.json');
+  res.writeHead(code, {
+    'X-Pult-Version': package.version,
+    'Content-Type': 'application/json'
+  });
   res.write(JSON.stringify(obj));
   res.end();
 }
