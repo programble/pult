@@ -156,7 +156,6 @@ function httpRequest(req, res) {
       port[name] = ports[name] || (ports[name] = ports.next++);
       resJSON(res, 200, port);
     } else {
-      console.log(req.headers.accept);
       if (req.headers.accept && req.headers.accept.indexOf('text/html') == 0) {
         fs.readFile(__dirname + '/status.html', { encoding: 'utf8' },
           function readHtml(err, data) {
