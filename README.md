@@ -69,6 +69,11 @@ node-project.dev 7001
 ruby-project.dev 7002
 ```
 
+### Output
+
+`pult` logs to standard error prefixed with `[pult]`. To disable
+logging, pass the `-q` option.
+
 ### Server
 
 By default, `pult-server` spawns itself with sudo then forks to the
