@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.0.0 (2014-05-11)
+
+ * Log domain and port before starting command
+ * Prefix `pult` output with `[pult]`
+ * Add `pult` `-q` / `--quiet` option
+ * Add `pult` long options and help text
+
 ## 0.7.0 (2014-02-04)
 
 * Add HTML status page on http://pult.dev/
