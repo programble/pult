@@ -16,21 +16,35 @@ var name = '', method = 'PORT';
 while (argv[0] && argv[0][0] == '-') {
   switch (argv[0]) {
   case '-k':
+  case '--kill':
     return http.request({ hostname: 'pult.dev', method: 'DELETE' },
       function httpDelete(res) {
         process.exit();
       }).end();
   case '-n':
+  case '--name':
     name = argv[1];
     argv = argv.slice(2);
     break;
   case '-p':
+  case '--port':
   case '-P':
+  case '--Port':
     method = argv.shift();
     break;
   case '-q':
+  case '--quiet':
     log.quiet = argv.shift();
     break;
+  case '-h':
+  case '--help':
+    log.quiet = false;
+    log('-k, --kill              Kill pult-server');
+    log('-n, --name "name"       Set domain name');
+    log('-p, --port              Set port by passing -p to command');
+    log('-P, --Port              Set port by passing -P to command');
+    log('-q, --quiet             Disable logging');
+    return;
   default:
     log('unknown option', argv[0]);
     process.exit(1);
