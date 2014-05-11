@@ -4,6 +4,11 @@ var fs = require('fs');
 var http = require('http');
 var spawn = require('child_process').spawn;
 
+function log() {
+  if (!log.quiet)
+    console.error('[pult]', Array.prototype.join.call(arguments, ' '));
+}
+
 var argv = process.argv.slice(2);
 
 var name = '', method = 'PORT';
@@ -23,8 +28,11 @@ while (argv[0] && argv[0][0] == '-') {
   case '-P':
     method = argv.shift();
     break;
+  case '-q':
+    log.quiet = argv.shift();
+    break;
   default:
-    console.log('unknown option ' + argv[0]);
+    log('unknown option', argv[0]);
     process.exit(1);
   }
 }
@@ -45,8 +53,8 @@ function getPort() {
   http.get('http://pult.dev/' + name, function httpGet(res) {
     var package = require('./package.json');
     if (res.headers['x-pult-version'] != package.version)
-      console.log('warning: pult-server has different version: ' +
-        res.headers['x-pult-version'] + ' != ' + package.version);
+      log('warning: pult-server has different version:',
+          res.headers['x-pult-version'], '!=', package.version);
 
     res.setEncoding('utf8');
     res.on('data', function httpGetData(data) {
@@ -55,7 +63,7 @@ function getPort() {
         if (name)
           spawnWithPort(ports[host]);
         else
-          console.log(host + ' ' + ports[host]);
+          log(host, ports[host]);
     });
   });
 }
