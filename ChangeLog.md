@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.1 (2014-05-11)
+
+ * Update dependencies
+ * Remove `console.log` from `pult-server`
+
 ## 1.0.0 (2014-05-11)
 
  * Log domain and port before starting command
