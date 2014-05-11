@@ -87,5 +87,6 @@ function spawnWithPort(port) {
     process.env.PORT = port;
   else
     argv.push(method, port);
+  log('http://' + name + '.dev', '-->', 'http://localhost:' + port);
   spawn(argv[0], argv.slice(1), { stdio: 'inherit' });
 }
