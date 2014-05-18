@@ -205,7 +205,8 @@ function getPorts() {
         // Do not display `next` as a link.
         if (domain == 'next')
           log('next:', port);
-        else
+        // Do not display pult.dev link.
+        else if (domain != 'pult.dev')
           log('http://' + domain, '-->', 'http://localhost:' + port);
       }
       process.exit();
