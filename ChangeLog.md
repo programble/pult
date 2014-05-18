@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.1 (2014-05-18)
+
+ * Fix reading `.pult`
+
 ## 2.0.0 (2014-05-18)
 
  * Add Docco documentation
