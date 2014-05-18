@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.0.0 (2014-05-18)
+
+ * Add Docco documentation
+ * Add client library
+ * Automatically start server from command line
+ * Add built-in static file server
+ * Add `--help` to `pult-server`
+ * Add long options to `pult-server`
+ * Send `Content-Length` header for responses from `pult-server`
+ * Support `HEAD` requests to `pult-server`
+ * Load `status.html` once
+ * Use Bootstrap 3.1.1 on `pult-server` status page
+
 ## 1.0.1 (2014-05-11)
 
  * Update dependencies
