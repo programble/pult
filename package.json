@@ -1,27 +1,36 @@
 {
-  "name":        "pult",
-  "version":     "1.0.1",
+  "name": "pult",
+  "version": "1.0.1",
   "description": "Access local servers on .dev domains",
   "keywords": [
     "local",
     "server",
     "proxy",
-    "dns"
+    "dns",
+    "domain",
+    "http"
   ],
-  "author":   "Curtis McEnroe <curtis@cmcenroe.me> (http://cmcenroe.me)",
-  "license":  "ISC",
+  "author": "Curtis McEnroe <curtis@cmcenroe.me> (http://cmcenroe.me)",
+  "license": "ISC",
   "homepage": "https://github.com/programble/pult",
   "repository": {
     "type": "git",
-    "url":  "https://github.com/programble/pult.git"
+    "url": "https://github.com/programble/pult.git"
   },
+  "main": "lib/index.js",
   "bin": {
-    "pult":        "./pult.js",
-    "pult-server": "./pult-server.js"
+    "pult": "./bin/pult.js",
+    "pult-server": "./bin/server.js"
   },
-  "preferGlobal": true,
   "dependencies": {
     "http-proxy": "^1.1.3",
-    "native-dns": "^0.6.1"
+    "native-dns": "^0.6.1",
+    "mime": "^1.2.11"
+  },
+  "devDependencies": {
+    "docco": "^0.6.3"
+  },
+  "scripts": {
+    "docs": "./node_modules/.bin/docco lib/*.js bin/*.js *.js"
   }
 }
