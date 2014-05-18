@@ -37,6 +37,10 @@ documentation](http://cmcenroe.me/pult/example.html).
 
 ### From the Command Line
 
+```
+npm install -g pult
+```
+
 Running `pult` from the command line automatically spawns `pult-server`
 if it is not already running.
 
