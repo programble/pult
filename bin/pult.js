@@ -141,7 +141,7 @@ if (options.kill) {
 //
 if (!options.name) {
   fs.readFile('.pult', { encoding: 'utf8' }, function(err, data) {
-    if (err.code != 'ENOENT') throw err;
+    if (err && err.code != 'ENOENT') throw err;
     if (data)
       options.name = data.trim();
     else
