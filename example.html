@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Pult</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="pult.html">
+                pult.js
+              </a>
+            
+              
+              <a class="source" href="server.html">
+                server.js
+              </a>
+            
+              
+              <a class="source" href="example.html">
+                example.js
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+              
+              <a class="source" href="static.html">
+                static.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="pult">Pult</h1>
+<h2 id="client-library-example">Client Library Example</h2>
+<p>This is an example of a Node HTTP server using Pult to bind to a local
+<code>.dev</code> domain.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<span class="hljs-keyword">var</span> pult = <span class="hljs-built_in">require</span>(<span class="hljs-string">'pult'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The server will be available at <code>http://hello.dev</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> SERVER_NAME = <span class="hljs-string">'hello'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The port to fall back to if Pult is not available.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> DEFAULT_PORT = <span class="hljs-number">8080</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Create a simple HTTP server that responds with “Hello, World!” to every
+request.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> server = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> {</span>
+  <span class="hljs-keyword">var</span> body = <span class="hljs-string">'Hello, World!'</span>;
+  res.writeHead(<span class="hljs-number">200</span>, {
+    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'text/plain'</span>,
+    <span class="hljs-string">'Content-Length'</span>: body.length
+  });
+  res.write(body);
+  res.end();
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Only try to use Pult in development.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (process.env.NODE_ENV == <span class="hljs-string">'development'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Check if Pult is running.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>If the Pult server is up, retrieve a port number for <code>SERVER_NAME</code>
+from it.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (up) {
+      pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> {</span>
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Bind the HTTP server to the assigned port.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        server.listen(port);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Output a link to the <code>.dev</code> domain.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        console.log(<span class="hljs-string">'http://'</span> + domain);
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>If the Pult server is not running, bind the HTTP server to the <code>PORT</code>
+environment variable or the default development port.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">var</span> port = process.env.PORT || DEFAULT_PORT;
+      server.listen(port);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Output a link to the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      console.log(<span class="hljs-string">'http://localhost:'</span> + port);
+    }
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>In production, bind the HTTP server to the <code>PORT</code> environment variable.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>} <span class="hljs-keyword">else</span> {
+  server.listen(process.env.PORT);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h3 id="starting-the-pult-server-automatically">Starting the Pult server automatically</h3>
+<p>Though not recommended because some developers may not want to run the Pult
+server, it is possible to automatically start it before your server starts.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Callback to start the server once Pult is running.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startServer</span><span class="hljs-params">()</span> {</span>
+  pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> {</span>
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+    server.listen(port);
+    console.log(<span class="hljs-string">'http://'</span> + domain);
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Check if the Pult server is already running.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+  <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>If Pult is already running, start the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (up) {
+    startServer();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Otherwise, spawn the Pult server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  } <span class="hljs-keyword">else</span> {
+    pult.spawnServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Then start the HTTP server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      startServer();
+    });
+  }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

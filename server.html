@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>server.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="pult.html">
+                pult.js
+              </a>
+            
+              
+              <a class="source" href="server.html">
+                server.js
+              </a>
+            
+              
+              <a class="source" href="example.html">
+                example.js
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+              
+              <a class="source" href="static.html">
+                static.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>server.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>#!<span class="hljs-regexp">/usr/</span>bin/env node</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="pult-server">Pult Server</h2>
+<p>The Pult server manages assigning ports to <code>.dev</code> domains, which it serves
+through a local DNS server and HTTP reverse-proxy.</p>
+<pre><code>npm install -g
+</code></pre><pre><code>pult-server
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> spawn = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).spawn;
+<span class="hljs-keyword">var</span> http  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
+<span class="hljs-keyword">var</span> path  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">var</span> fs    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
+<span class="hljs-keyword">var</span> os    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
+
+<span class="hljs-keyword">var</span> dns       = <span class="hljs-built_in">require</span>(<span class="hljs-string">'native-dns'</span>);
+<span class="hljs-keyword">var</span> httpProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http-proxy'</span>);
+
+<span class="hljs-keyword">var</span> package = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../package.json'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3 id="log">Log</h3>
+<p>Log output to stdout with a prefix.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span><span class="hljs-params">()</span> {</span>
+  console.log(<span class="hljs-string">'[pult-server]'</span>, <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">' '</span>));
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h3 id="argument-parsing">Argument parsing</h3>
+<p>The <code>options</code> object will hold the parsed values of the command line
+arguments.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> options = {
+  firstPort: <span class="hljs-number">7001</span>,
+  listenHost: <span class="hljs-string">'127.0.0.1'</span>
+};
+
+<span class="hljs-keyword">var</span> argv = process.argv.slice(<span class="hljs-number">2</span>);
+<span class="hljs-keyword">while</span> (argv[<span class="hljs-number">0</span>] &amp;&amp; argv[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] == <span class="hljs-string">'-'</span>) {
+  <span class="hljs-keyword">switch</span> (argv[<span class="hljs-number">0</span>]) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li><code>--foreground</code>, <code>-f</code>: Do not fork to the background.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">case</span> <span class="hljs-string">'-f'</span>:
+  <span class="hljs-keyword">case</span> <span class="hljs-string">'--foreground'</span>:
+    options.foreground = argv.shift();
+    <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <ul>
+<li><code>--port</code>, <code>-p</code>: Set the first port to assign to a <code>.dev</code> domain.
+Defaults to 7001.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">case</span> <span class="hljs-string">'-p'</span>:
+  <span class="hljs-keyword">case</span> <span class="hljs-string">'--port'</span>:
+    options.firstPort = +argv.argv[<span class="hljs-number">1</span>];
+    argv = argv.slice(<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <ul>
+<li><code>--listen</code>, <code>-l</code>: Set the host to listen on (HTTP and DNS). Defaults to
+<code>127.0.0.1</code>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">case</span> <span class="hljs-string">'-l'</span>:
+  <span class="hljs-keyword">case</span> <span class="hljs-string">'--listen'</span>:
+    options.listenHost = argv[<span class="hljs-number">1</span>];
+    argv = argv.slice(<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <ul>
+<li><code>--help</code>, <code>-h</code>: Show help text.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">case</span> <span class="hljs-string">'-h'</span>:
+  <span class="hljs-keyword">case</span> <span class="hljs-string">'--help'</span>:
+    options.help = argv.shift();
+    <span class="hljs-keyword">break</span>;
+
+  <span class="hljs-keyword">default</span>:
+    log(<span class="hljs-string">'unknown option'</span>, argv[<span class="hljs-number">0</span>]);
+    process.exit(<span class="hljs-number">1</span>);
+  }
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3 id="help-text">Help text</h3>
+<p>Output help text and exit.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (options.help) {
+  log(<span class="hljs-string">'-f, --foreground             Do not found to the background'</span>);
+  log(<span class="hljs-string">'-p, --port "port"            Set first port to assign'</span>);
+  log(<span class="hljs-string">'-l, --listen "host"          Set host to listen on'</span>);
+
+  process.exit();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3 id="respawn-as-root">Respawn as root</h3>
+<p>If not running as root, respawn the process with <code>sudo</code> to gain permissions
+to listen on ports 80 (HTTP) and 53 (DNS).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (process.getuid() != <span class="hljs-number">0</span>) {
+  log(<span class="hljs-string">'respawning with sudo...'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Replace <code>node</code> with absolute path to executed <code>node</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> args = process.argv.slice(<span class="hljs-number">1</span>);
+  args.unshift(process.execPath);
+
+  <span class="hljs-keyword">var</span> respawn = spawn(<span class="hljs-string">'sudo'</span>, args, { stdio: <span class="hljs-string">'inherit'</span> });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Exit with the same code as the respawn.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  respawn.on(<span class="hljs-string">'exit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code, signal)</span> {</span>
+    process.exit(code);
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Don’t do anything else.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h3 id="fork-to-background">Fork to background</h3>
+<p>Fork to background unless <code>-f</code> was passed. Pass <code>-f</code> to the new process to
+prevent an infinite fork loop.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (!options.foreground) {
+  log(<span class="hljs-string">'forking to background...'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Insert <code>-f</code> at the beginning of the argument list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> args = process.argv.slice(<span class="hljs-number">1</span>);
+  args.splice(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-string">'-f'</span>);
+
+  spawn(process.execPath, args, { stdio: <span class="hljs-string">'ignore'</span>, detached: <span class="hljs-literal">true</span> }).unref();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Don’t do anything else.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h3 id="ports">Ports</h3>
+<p>The <code>ports</code> object will hold all the port assignments for <code>.dev</code> domains, as
+well as the next port to assign.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> ports = {
+  <span class="hljs-string">'pult.dev'</span>: <span class="hljs-number">80</span>,
+  next: options.firstPort,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h4 id="get-port">Get port</h4>
+<p>Get the port assigned to a domain, traversing up subdomains until a match
+is found.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  get: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(domain)</span> {</span>
+    <span class="hljs-keyword">while</span> (!<span class="hljs-keyword">this</span>[domain] &amp;&amp; domain.indexOf(<span class="hljs-string">'.'</span>) != -<span class="hljs-number">1</span>)
+      domain = domain.slice(domain.indexOf(<span class="hljs-string">'.'</span>) + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[domain];
+  }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h3 id="dns-server">DNS Server</h3>
+<p>Respond to <code>A</code> or <code>ANY</code> questions for domains with assigned ports with an
+<code>A</code> record pointing to the host of the HTTP server. Respond to all other
+questions with <code>NOTIMP</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> dnsServer = dns.createServer();
+dnsServer.on(<span class="hljs-string">'request'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> {</span>
+  <span class="hljs-keyword">var</span> name = req.question[<span class="hljs-number">0</span>].name;
+  <span class="hljs-keyword">var</span> type = dns.consts.QTYPE_TO_NAME[req.question[<span class="hljs-number">0</span>].type];
+
+  <span class="hljs-keyword">if</span> ((type == <span class="hljs-string">'A'</span> || type == <span class="hljs-string">'ANY'</span>) &amp;&amp; ports.get(name)) {
+    res.answer.push(dns.A({
+      name: name,
+      address: options.listenHost,
+      ttl: <span class="hljs-number">600</span>
+    }));
+  } <span class="hljs-keyword">else</span> {
+    res.header.rcode = dns.consts.NAME_TO_RCODE.NOTIMP;
+  }
+  res.send();
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h3 id="http-server">HTTP Server</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> httpServer = http.createServer();
+httpServer.proxy = httpProxy.createProxyServer({});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h4 id="end-json">End JSON</h4>
+<p>Write a JSON object to the HTTP response along with a <code>X-Pult-Version</code>
+header and end the response.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">endJSON</span><span class="hljs-params">(status, obj)</span> {</span>
+  <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.stringify(obj);
+  <span class="hljs-keyword">this</span>.writeHead(status, {
+    <span class="hljs-string">'X-Pult-Version'</span>: package.version,
+    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,
+    <span class="hljs-string">'Content-Length'</span>: json.length
+  });
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.req.method != <span class="hljs-string">'HEAD'</span>)
+    <span class="hljs-keyword">this</span>.write(json);
+  <span class="hljs-keyword">this</span>.end();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h4 id="http-request">HTTP Request</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>httpServer.on(<span class="hljs-string">'request'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Allow response methods to access the request.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  res.req = req;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Assign extra response methods.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  res.endJSON = endJSON;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Get host without trailing port.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> host = req.headers.host.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">0</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h5 id="requests-to-pult-dev-or-localhost">Requests to pult.dev or localhost</h5>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (host == <span class="hljs-string">'pult.dev'</span> || host == <span class="hljs-string">'localhost'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h6 id="delete-">DELETE /</h6>
+<p>Shut down the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (req.method == <span class="hljs-string">'DELETE'</span> &amp;&amp; req.url == <span class="hljs-string">'/'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Respond with the final state of the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      res.endJSON(<span class="hljs-number">200</span>, ports);
+      <span class="hljs-keyword">return</span> onExit();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>For all other URLs, only <code>GET</code> and <code>HEAD</code> are supported.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (req.method != <span class="hljs-string">'GET'</span> &amp;&amp; req.method != <span class="hljs-string">'HEAD'</span>)
+      <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">405</span>, { method: req.method });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Browsers request <code>favicon.ico</code> automatically. Prevent it from becoming a
+<code>.dev</code> domain.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (req.url == <span class="hljs-string">'/favicon.ico'</span>)
+      <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">404</span>, { url: req.url });
+
+    <span class="hljs-keyword">var</span> domain = req.url.slice(<span class="hljs-number">1</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h6 id="get-domain">GET /:domain</h6>
+<p>Get or assign a port for <code>:domain</code>, which is a domain or subdomain
+without <code>.dev</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (domain) {
+      domain += <span class="hljs-string">'.dev'</span>;
+      <span class="hljs-keyword">var</span> port = {};
+      port[domain] = ports[domain] || (ports[domain] = ports.next++);
+      <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">200</span>, port);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h6 id="get-">GET /</h6>
+<p>For browsers, serve an HTML status page with links to each domain. For
+all other clients, serve a JSON response of port assignments.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">if</span> (req.headers.accept &amp;&amp; req.headers.accept.indexOf(<span class="hljs-string">'text/html'</span>) == <span class="hljs-number">0</span>) {
+        res.writeHead(<span class="hljs-number">200</span>, {
+          <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'text/html'</span>,
+          <span class="hljs-string">'Content-Length'</span>: httpServer.statusHTML.length
+        });
+        res.write(httpServer.statusHTML);
+        <span class="hljs-keyword">return</span> res.end();
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">200</span>, ports);
+      }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h5 id="requests-to-other-domains">Requests to other domains</h5>
+<p>If a port is assigned to the requested host, proxy the request to that
+port on <code>127.0.0.1</code>. If an error occurs when trying to proxy, respond
+with 502. If there is no port assigned, respond with 503.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">var</span> port = ports.get(host);
+
+    <span class="hljs-keyword">if</span> (port) {
+      httpServer.proxy.web(req, res, {
+        target: <span class="hljs-string">'http://127.0.0.1:'</span> + port
+      }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+        <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">502</span>, err);
+      });
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> res.endJSON(<span class="hljs-number">503</span>, { host: host });
+    }
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <h4 id="http-upgrade">HTTP Upgrade</h4>
+<p>If a port is assigned to the requested host, proxy the upgrade request to
+the websocket on the port.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>httpServer.on(<span class="hljs-string">'upgrade'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, socket, head)</span> {</span>
+  <span class="hljs-keyword">var</span> port = port.get(req.headers.host.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">0</span>]);
+  <span class="hljs-keyword">if</span> (port) {
+    proxy.ws(req, socket, head, {
+      target: <span class="hljs-string">'ws://127.0.0.1:'</span> + port
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>FIXME: Better error handling.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      log(err.stack);
+    });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>FIXME: Handle no port being assigned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h3 id="status-html">Status HTML</h3>
+<p>Load the status page HTML into a buffer for re-use.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> statusPath = path.join(__dirname, <span class="hljs-string">'..'</span>, <span class="hljs-string">'lib'</span>, <span class="hljs-string">'status.html'</span>);
+fs.readFile(statusPath, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> {</span>
+  <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+  httpServer.statusHTML = data;
+  startServers();
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <h3 id="start-servers">Start Servers</h3>
+<p>Bind HTTP and DNS servers to port 80 and 53 respectively, on the listen
+host.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startServers</span><span class="hljs-params">()</span> {</span>
+  httpServer.listen(<span class="hljs-number">80</span>, options.listenHost);
+  dnsServer.serve(<span class="hljs-number">53</span>, options.listenHost);
+  registerDNSServer();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h3 id="register-dns-server">Register DNS Server</h3>
+<p>Add the local DNS server to <code>/etc/resolv.conf</code> on Linux, <code>/etc/resolver/dev</code>
+on OS X.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">registerDNSServer</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> nameserverLine = <span class="hljs-string">'nameserver '</span> + options.listenHost;
+
+  <span class="hljs-keyword">if</span> (os.platform() == <span class="hljs-string">'darwin'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Make sure <code>/etc/resolver</code> exists.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fs.mkdir(<span class="hljs-string">'/etc/resolver'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+      log(<span class="hljs-string">'creating /etc/resolver/dev...'</span>);
+      fs.writeFile(<span class="hljs-string">'/etc/resolver/dev'</span>, nameserverLine, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+      });
+    });
+  } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Only add the nameserver line if it isn’t already present in
+<code>/etc/resolv.conf</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fs.readFile(<span class="hljs-string">'/etc/resolv.conf'</span>, { encoding: <span class="hljs-string">'utf8'</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> {</span>
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+
+      <span class="hljs-keyword">if</span> (data.indexOf(nameserverLine) == -<span class="hljs-number">1</span>) {
+        log(<span class="hljs-string">'adding'</span>, nameserverLine, <span class="hljs-string">'to /etc/resolv.conf'</span>);
+        <span class="hljs-keyword">var</span> newData = nameserverLine + <span class="hljs-string">'\n'</span> + data;
+        fs.writeFile(<span class="hljs-string">'/etc/resolv.conf'</span>, newData, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+        });
+      }
+    });
+  }
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h3 id="on-exit">On Exit</h3>
+<p>On exit, remove the DNS server from <code>/etc/resolv.conf</code> on Linux,
+<code>/etc/resolver</code> on OS X.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>process.on(<span class="hljs-string">'SIGINT'</span>, onExit);
+process.on(<span class="hljs-string">'SIGTERM'</span>, onExit);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onExit</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> nameserverLine = <span class="hljs-string">'nameserver '</span> + options.listenHost;
+
+  <span class="hljs-keyword">if</span> (os.platform() == <span class="hljs-string">'darwin'</span>) {
+    log(<span class="hljs-string">'removing /etc/resolver/dev'</span>);
+    fs.unlink(<span class="hljs-string">'/etc/resolver/dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+      process.exit();
+    });
+  } <span class="hljs-keyword">else</span> {
+    fs.readFile(<span class="hljs-string">'/etc/resolv.conf'</span>, { encoding: <span class="hljs-string">'utf8'</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> {</span>
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+      <span class="hljs-keyword">if</span> (data.indexOf(nameserverLine) == <span class="hljs-number">0</span>) {
+        log(<span class="hljs-string">'removing'</span>, nameserverLine, <span class="hljs-string">'from /etc/resolv.conf'</span>);
+        <span class="hljs-keyword">var</span> newData = data.replace(nameserverLine + <span class="hljs-string">'\n'</span>, <span class="hljs-string">''</span>);
+        fs.writeFile(<span class="hljs-string">'/etc/resolv.conf'</span>, newData, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+          <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+          process.exit();
+        });
+      } <span class="hljs-keyword">else</span> process.exit();
+    });
+  }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
