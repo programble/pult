@@ -18,6 +18,9 @@ from the command line for use with other HTTP servers.
 
 ### As a Library
 
+See the [library documentation](http://cmcenroe.me/pult/index.html) for
+more information.
+
 ```js
 var pult = require('pult');
 var http = require('http');
