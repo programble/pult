@@ -18,7 +18,6 @@ var spawn = require('child_process').spawn;
 var http  = require('http');
 var path  = require('path');
 var fs    = require('fs');
-var os    = require('os');
 
 var dns       = require('native-dns');
 var httpProxy = require('http-proxy');
@@ -334,7 +333,7 @@ function startServers() {
 function registerDNSServer() {
   var nameserverLine = 'nameserver ' + options.listenHost;
 
-  if (os.platform() == 'darwin') {
+  if (process.platform == 'darwin') {
     // Make sure `/etc/resolver` exists.
     fs.mkdir('/etc/resolver', function(err) {
       log('creating /etc/resolver/dev...');
@@ -369,7 +368,7 @@ process.on('SIGTERM', onExit);
 function onExit() {
   var nameserverLine = 'nameserver ' + options.listenHost;
 
-  if (os.platform() == 'darwin') {
+  if (process.platform == 'darwin') {
     log('removing /etc/resolver/dev');
     fs.unlink('/etc/resolver/dev', function(err) {
       if (err) throw err;
