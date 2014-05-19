@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.0.2 (2014-05-19)
+
+ * Use simpler `process.platform` instead of `os.platform()`
+ * Use `readStream.resume()` to let the stream end without reading data
+
 ## 2.0.1 (2014-05-18)
 
  * Fix reading `.pult`
