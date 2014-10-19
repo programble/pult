@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.3 (2014-10-18)
+
+ * Send `X-Forwarded` headers when proxying
+
 ## 2.0.2 (2014-05-19)
 
  * Use simpler `process.platform` instead of `os.platform()`
