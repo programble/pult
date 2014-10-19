@@ -180,7 +180,7 @@ dnsServer.on('request', function(req, res) {
 // ### HTTP Server
 //
 var httpServer = http.createServer();
-httpServer.proxy = httpProxy.createProxyServer({});
+httpServer.proxy = httpProxy.createProxyServer({ xfwd: true });
 
 // #### End JSON
 //
