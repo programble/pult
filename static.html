@@ -430,13 +430,11 @@ directory.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>FIXME: Need to register a no-op data handler so that the file
-descriptor gets closed. Closing the file descriptor using
-<code>fs.close</code> causes <code>EBADF</code> errors to be emitted on <code>readStream</code>.</p>
+              <p>Let data flow but don’t read it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          readStream.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span> });
+            <div class="content"><div class='highlight'><pre>          readStream.resume();
           res.writeHead(<span class="hljs-number">304</span>, headers);
           <span class="hljs-keyword">return</span> res.end();
         }
@@ -483,11 +481,11 @@ descriptor gets closed. Closing the file descriptor using
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>FIXME: See above.</p>
+              <p>Let data flow but don’t read it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        readStream.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span> });
+            <div class="content"><div class='highlight'><pre>        readStream.resume();
         res.end();
       }
     });

@@ -383,7 +383,7 @@ use the name of the current directory.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (!options.name) {
   fs.readFile(<span class="hljs-string">'.pult'</span>, { encoding: <span class="hljs-string">'utf8'</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> {</span>
-    <span class="hljs-keyword">if</span> (err.code != <span class="hljs-string">'ENOENT'</span>) <span class="hljs-keyword">throw</span> err;
+    <span class="hljs-keyword">if</span> (err &amp;&amp; err.code != <span class="hljs-string">'ENOENT'</span>) <span class="hljs-keyword">throw</span> err;
     <span class="hljs-keyword">if</span> (data)
       options.name = data.trim();
     <span class="hljs-keyword">else</span>

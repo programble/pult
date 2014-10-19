@@ -90,7 +90,6 @@ through a local DNS server and HTTP reverse-proxy.</p>
 <span class="hljs-keyword">var</span> http  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>);
 <span class="hljs-keyword">var</span> path  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
 <span class="hljs-keyword">var</span> fs    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
-<span class="hljs-keyword">var</span> os    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
 
 <span class="hljs-keyword">var</span> dns       = <span class="hljs-built_in">require</span>(<span class="hljs-string">'native-dns'</span>);
 <span class="hljs-keyword">var</span> httpProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http-proxy'</span>);
@@ -460,7 +459,7 @@ dnsServer.on(<span class="hljs-string">'request'</span>, <span class="hljs-funct
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> httpServer = http.createServer();
-httpServer.proxy = httpProxy.createProxyServer({});</pre></div></div>
+httpServer.proxy = httpProxy.createProxyServer({ xfwd: <span class="hljs-literal">true</span> });</pre></div></div>
             
         </li>
         
@@ -826,7 +825,7 @@ on OS X.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">registerDNSServer</span><span class="hljs-params">()</span> {</span>
   <span class="hljs-keyword">var</span> nameserverLine = <span class="hljs-string">'nameserver '</span> + options.listenHost;
 
-  <span class="hljs-keyword">if</span> (os.platform() == <span class="hljs-string">'darwin'</span>) {</pre></div></div>
+  <span class="hljs-keyword">if</span> (process.platform == <span class="hljs-string">'darwin'</span>) {</pre></div></div>
             
         </li>
         
@@ -897,7 +896,7 @@ process.on(<span class="hljs-string">'SIGTERM'</span>, onExit);
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onExit</span><span class="hljs-params">()</span> {</span>
   <span class="hljs-keyword">var</span> nameserverLine = <span class="hljs-string">'nameserver '</span> + options.listenHost;
 
-  <span class="hljs-keyword">if</span> (os.platform() == <span class="hljs-string">'darwin'</span>) {
+  <span class="hljs-keyword">if</span> (process.platform == <span class="hljs-string">'darwin'</span>) {
     log(<span class="hljs-string">'removing /etc/resolver/dev'</span>);
     fs.unlink(<span class="hljs-string">'/etc/resolver/dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
       <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
