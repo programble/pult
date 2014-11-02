@@ -17,6 +17,8 @@
 var fs    = require('fs');
 var spawn = require('child_process').spawn;
 
+var splitargs = require('splitargs');
+
 var pult         = require('../lib');
 var staticServer = require('../lib/static');
 
@@ -36,8 +38,7 @@ function log() {
 //
 if (fs.existsSync('.pultrc')) {
   var pultrc = fs.readFileSync('.pultrc', { encoding: 'utf8' });
-  // TODO: Interpret quoted portions as single arguments
-  [].push.apply(process.argv, pultrc.trim().split(' '));
+  [].push.apply(process.argv, splitargs(pultrc.trim()));
 }
 
 // ### Argument parsing
