@@ -171,11 +171,8 @@ documentation](http://cmcenroe.me/pult/server.html).
 
 ## Compatibility
 
-Pult has been tested on:
-
-* Ubuntu 13.10
-* Mac OS X 10.9.2
-* Arch Linux (2014-01-26)
+Pult is compatible with Linux systems using `/etc/resolv.conf` and with
+Mac OS X using `/etc/resolver`.
 
 ## License
 
