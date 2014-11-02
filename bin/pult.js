@@ -38,7 +38,7 @@ function log() {
 //
 if (fs.existsSync('.pultrc')) {
   var pultrc = fs.readFileSync('.pultrc', { encoding: 'utf8' });
-  [].push.apply(process.argv, splitargs(pultrc.trim()));
+  Array.prototype.push.apply(process.argv, splitargs(pultrc.trim()));
 }
 
 // ### Argument parsing
