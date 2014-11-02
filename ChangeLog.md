@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.1.0 (2014-11-01)
+
+ * Add `.pultrc` support
+ * Deprecate `.pult`
+
 ## 2.0.3 (2014-10-18)
 
  * Send `X-Forwarded` headers when proxying
