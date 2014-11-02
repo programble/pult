@@ -29,6 +29,17 @@ function log() {
     console.error('[pult]', Array.prototype.join.call(arguments, ' '));
 }
 
+// ### Read .pultrc
+//
+// If `.pultrc` exists in the current directory, read it and append its
+// contents to the command-line arguments list.
+//
+if (fs.existsSync('.pultrc')) {
+  var pultrc = fs.readFileSync('.pultrc', { encoding: 'utf8' });
+  // TODO: Interpret quoted portions as single arguments
+  [].push.apply(process.argv, pultrc.trim().split(' '));
+}
+
 // ### Argument parsing
 //
 // The `argv` array will be partially consumed by parsing any `-` short or `--`
