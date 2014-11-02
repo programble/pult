@@ -74,14 +74,6 @@ using the `-n` option:
 node-project $ pult -n my-project node app # http://my-project.dev
 ```
 
-You can also set the domain in the `.pult` file of the current
-directory:
-
-```sh
-node-project $ echo 'my-project' > .pult
-node-project $ pult node app # http://my-project.dev
-```
-
 #### Subdomains
 
 Pult also serves the same application on all subdomains of its `.dev`
@@ -89,10 +81,22 @@ domain. For example, `node-project` will be available at
 `http://node-project.dev`, `http://www.node-project.dev`, etc.
 
 Pult also allows you to serve different applications on subdomains
-simply by specifying the subdomain with `-n` or in the `.pult` file:
+simply by specifying the subdomain with `-n`:
 
 ```sh
 other-project $ pult -n other.project node app # http://other.project.dev
+```
+
+#### Configuration
+
+Pult interprets the contents of `.pultrc` in the current directory as
+command-line arguments. This allows saving the domain name and command
+to run so that bringing a server up on a `.dev` domain is as simple as
+running `pult`.
+
+```sh
+node-project $ echo "-n my-project node app" > .pultrc
+node-project $ pult # node app on http://my-project.dev
 ```
 
 #### Status
