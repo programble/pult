@@ -147,6 +147,9 @@ if (options.kill) {
 
 // ### Read dot Pult
 //
+// *Deprecation warning:* `.pult` files are deprecated. Names should be set in
+// the more powerful `.pultrc` using command-line syntax.
+//
 // If a name has not been specified on the command line through `--name`, try
 // to read one from `.pult` in the current directory. If that does not exist,
 // use the name of the current directory.
@@ -154,10 +157,13 @@ if (options.kill) {
 if (!options.name) {
   fs.readFile('.pult', { encoding: 'utf8' }, function(err, data) {
     if (err && err.code != 'ENOENT') throw err;
-    if (data)
+    if (data) {
       options.name = data.trim();
-    else
+      log('deprecation warning: .pult is deprecated in favor of .pultrc');
+      log('  suggested .pultrc: -n', options.name, argv.join(' '));
+    } else {
       options.name = process.cwd().split('/').reverse()[0];
+    }
     ensurePultServer();
   });
 } else ensurePultServer();
