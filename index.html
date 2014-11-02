@@ -85,7 +85,7 @@ Library Example</a>.</p>
 
 <span class="hljs-keyword">var</span> package = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../package.json'</span>);
 
-exports = module.exports = {</pre></div></div>
+exports = <span class="hljs-built_in">module</span>.exports = {</pre></div></div>
             
         </li>
         
@@ -103,8 +103,8 @@ exports = module.exports = {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  serverStatus: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
-    dns.lookup(<span class="hljs-string">'pult.dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, address, family)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  serverStatus: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> </span>{
+    dns.lookup(<span class="hljs-string">'pult.dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, address, family)</span> </span>{
       <span class="hljs-keyword">if</span> (err &amp;&amp; err.code == <span class="hljs-string">'ENOTFOUND'</span>) done(<span class="hljs-literal">null</span>, <span class="hljs-literal">false</span>);
       <span class="hljs-keyword">else</span> done(err, <span class="hljs-literal">true</span>);
     });
@@ -127,7 +127,7 @@ on <code>pult.dev</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  spawnServer: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(args, done)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  spawnServer: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(args, done)</span> </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> args == <span class="hljs-string">'function'</span>) {
       done = args;
       args = [];
@@ -138,7 +138,7 @@ on <code>pult.dev</code>.</p>
       stdio: <span class="hljs-string">'inherit'</span>
     });
 
-    serverProcess.on(<span class="hljs-string">'exit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code, signal)</span> {</span>
+    serverProcess.on(<span class="hljs-string">'exit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code, signal)</span> </span>{
       <span class="hljs-keyword">if</span> (code != <span class="hljs-number">0</span>) {
         <span class="hljs-keyword">var</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'pult-server failed to start'</span>);
         err.exitCode = code;
@@ -146,7 +146,7 @@ on <code>pult.dev</code>.</p>
       }
 
       <span class="hljs-keyword">var</span> tries = <span class="hljs-number">0</span>;
-      <span class="hljs-keyword">var</span> serverWait = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+      <span class="hljs-keyword">var</span> serverWait = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> </span>{
         <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> done(err);
         <span class="hljs-keyword">if</span> (up) <span class="hljs-keyword">return</span> done();
         <span class="hljs-keyword">if</span> (++tries == <span class="hljs-number">50</span>) {
@@ -155,7 +155,7 @@ on <code>pult.dev</code>.</p>
           );
           <span class="hljs-keyword">return</span> done(err);
         }
-        setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+        setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
           exports.serverStatus(serverWait)
         }, <span class="hljs-number">100</span>);
       };
@@ -179,11 +179,11 @@ received.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  killServer: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  killServer: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> </span>{
     http.request({
       hostname: <span class="hljs-string">'pult.dev'</span>,
       method: <span class="hljs-string">'DELETE'</span>
-    }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> {</span>
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> </span>{
       done();
     }).on(<span class="hljs-string">'error'</span>, done).end();
   },</pre></div></div>
@@ -203,8 +203,8 @@ received.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  serverVersion: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
-    http.get(<span class="hljs-string">'http://pult.dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  serverVersion: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> </span>{
+    http.get(<span class="hljs-string">'http://pult.dev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> </span>{
       done(<span class="hljs-literal">null</span>, res.headers[<span class="hljs-string">'x-pult-version'</span>], package.version);
     }).on(<span class="hljs-string">'error'</span>, done);
   },</pre></div></div>
@@ -228,10 +228,10 @@ received.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  get: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path, done)</span> {</span>
-    http.get(<span class="hljs-string">'http://pult.dev'</span> + path, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  get: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path, done)</span> </span>{
+    http.get(<span class="hljs-string">'http://pult.dev'</span> + path, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> </span>{
       res.setEncoding(<span class="hljs-string">'utf8'</span>);
-      res.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+      res.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> </span>{
         done(<span class="hljs-literal">null</span>, <span class="hljs-built_in">JSON</span>.parse(data));
       });
     }).on(<span class="hljs-string">'error'</span>, done);
@@ -255,7 +255,7 @@ object.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getPorts: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  getPorts: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> </span>{
     exports.get(<span class="hljs-string">'/'</span>, done);
   },</pre></div></div>
             
@@ -277,8 +277,8 @@ port number and <code>domain</code> is the full domain name (with <code>.dev</co
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getPort: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, done)</span> {</span>
-    exports.get(<span class="hljs-string">'/'</span> + name, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, ports)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  getPort: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, done)</span> </span>{
+    exports.get(<span class="hljs-string">'/'</span> + name, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, ports)</span> </span>{
       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> domain <span class="hljs-keyword">in</span> ports) {
         <span class="hljs-keyword">return</span> done(<span class="hljs-literal">null</span>, ports[domain], domain);
       }

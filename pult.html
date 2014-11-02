@@ -89,6 +89,8 @@ domain.</p>
 <span class="hljs-keyword">var</span> fs    = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
 <span class="hljs-keyword">var</span> spawn = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).spawn;
 
+<span class="hljs-keyword">var</span> splitargs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'splitargs'</span>);
+
 <span class="hljs-keyword">var</span> pult         = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib'</span>);
 <span class="hljs-keyword">var</span> staticServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/static'</span>);</pre></div></div>
             
@@ -106,9 +108,9 @@ domain.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span><span class="hljs-params">()</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span><span class="hljs-params">()</span> </span>{
   <span class="hljs-keyword">if</span> (!options.quiet)
-    console.error(<span class="hljs-string">'[pult]'</span>, <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">' '</span>));
+    <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'[pult]'</span>, <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">' '</span>));
 }</pre></div></div>
             
         </li>
@@ -119,6 +121,26 @@ domain.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h3 id="read-pultrc">Read .pultrc</h3>
+<p>If <code>.pultrc</code> exists in the current directory, read it and append its
+contents to the command-line arguments list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (fs.existsSync(<span class="hljs-string">'.pultrc'</span>)) {
+  <span class="hljs-keyword">var</span> pultrc = fs.readFileSync(<span class="hljs-string">'.pultrc'</span>, { encoding: <span class="hljs-string">'utf8'</span> });
+  <span class="hljs-built_in">Array</span>.prototype.push.apply(process.argv, splitargs(pultrc.trim()));
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h3 id="argument-parsing">Argument parsing</h3>
 <p>The <code>argv</code> array will be partially consumed by parsing any <code>-</code> short or <code>--</code>
@@ -132,11 +154,11 @@ process.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>The <code>options</code> object will hold the parsed values of the command line
 arguments.</p>
@@ -148,11 +170,11 @@ arguments.</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>The default method of passing the port number to the server process is
 through the <code>PORT</code> environment variable.</p>
@@ -168,11 +190,11 @@ through the <code>PORT</code> environment variable.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <ul>
 <li><code>--kill</code>, <code>-k</code>: Kill the Pult server.</li>
@@ -188,11 +210,11 @@ through the <code>PORT</code> environment variable.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <ul>
 <li><code>--name</code>, <code>-n</code>: Set domain name for the server. Value should not
@@ -210,11 +232,11 @@ contain the <code>.dev</code> suffix.</li>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <ul>
 <li><code>--port</code>, <code>-p</code>, <code>-P</code>: Pass the port number to the server process by appending
@@ -232,11 +254,11 @@ a <code>-p</code>, <code>-P</code> or <code>--port</code> argument.</li>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <ul>
 <li><code>--static</code>, <code>-s</code>: Start a <a href="static.html">static file HTTP server</a> in the
@@ -253,11 +275,11 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <ul>
 <li><code>--quiet</code>, <code>-q</code>: Disable logging.</li>
@@ -273,11 +295,11 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <ul>
 <li><code>--help</code>, <code>-h</code>: Show help text.</li>
@@ -293,11 +315,11 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Output unknown option error even if quiet was set and exit.</p>
 
@@ -313,11 +335,11 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h3 id="help-text">Help text</h3>
 <p>Output help text even if quiet is set then exit.</p>
@@ -339,11 +361,11 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h3 id="kill-pult-server">Kill Pult Server</h3>
 <p>Kill the Pult server if it is running, and exit.</p>
@@ -351,10 +373,10 @@ current directory instead of a specific server process.</li>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (options.kill) {
-  <span class="hljs-keyword">return</span> pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+  <span class="hljs-keyword">return</span> pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> </span>{
     <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
     <span class="hljs-keyword">if</span> (up) {
-      pult.killServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+      pult.killServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> </span>{
         <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
         process.exit();
       });
@@ -368,13 +390,15 @@ current directory instead of a specific server process.</li>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h3 id="read-dot-pult">Read dot Pult</h3>
+<p><em>Deprecation warning:</em> <code>.pult</code> files are deprecated. Names should be set in
+the more powerful <code>.pultrc</code> using command-line syntax.</p>
 <p>If a name has not been specified on the command line through <code>--name</code>, try
 to read one from <code>.pult</code> in the current directory. If that does not exist,
 use the name of the current directory.</p>
@@ -382,45 +406,18 @@ use the name of the current directory.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> (!options.name) {
-  fs.readFile(<span class="hljs-string">'.pult'</span>, { encoding: <span class="hljs-string">'utf8'</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> {</span>
+  fs.readFile(<span class="hljs-string">'.pult'</span>, { encoding: <span class="hljs-string">'utf8'</span> }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span> </span>{
     <span class="hljs-keyword">if</span> (err &amp;&amp; err.code != <span class="hljs-string">'ENOENT'</span>) <span class="hljs-keyword">throw</span> err;
-    <span class="hljs-keyword">if</span> (data)
+    <span class="hljs-keyword">if</span> (data) {
       options.name = data.trim();
-    <span class="hljs-keyword">else</span>
+      log(<span class="hljs-string">'deprecation warning: .pult is deprecated in favor of .pultrc'</span>);
+      log(<span class="hljs-string">'  suggested .pultrc: -n'</span>, options.name, argv.join(<span class="hljs-string">' '</span>));
+    } <span class="hljs-keyword">else</span> {
       options.name = process.cwd().split(<span class="hljs-string">'/'</span>).reverse()[<span class="hljs-number">0</span>];
+    }
     ensurePultServer();
   });
 } <span class="hljs-keyword">else</span> ensurePultServer();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h3 id="ensure-pult-server">Ensure Pult Server</h3>
-<p>Check if the Pult server is running, and start it if it isn’t.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ensurePultServer</span><span class="hljs-params">()</span> {</span>
-  pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
-    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
-
-    <span class="hljs-keyword">if</span> (up)
-      checkVersion();
-    <span class="hljs-keyword">else</span> {
-      log(<span class="hljs-string">'starting server...'</span>);
-      pult.spawnServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
-        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
-        checkVersion();
-      });
-    }
-  });
-}</pre></div></div>
             
         </li>
         
@@ -431,19 +428,24 @@ use the name of the current directory.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h3 id="check-version">Check Version</h3>
-<p>Check the version of the running Pult server and output a warning if it does
-not match.</p>
+              <h3 id="ensure-pult-server">Ensure Pult Server</h3>
+<p>Check if the Pult server is running, and start it if it isn’t.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkVersion</span><span class="hljs-params">()</span> {</span>
-  pult.serverVersion(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, serverVersion, clientVersion)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ensurePultServer</span><span class="hljs-params">()</span> </span>{
+  pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> </span>{
     <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
-    <span class="hljs-keyword">if</span> (serverVersion != clientVersion)
-      log(<span class="hljs-string">'warning: server version'</span>, serverVersion, <span class="hljs-string">'!='</span>,
-          <span class="hljs-string">'client version'</span>, clientVersion);
-    getPorts();
+
+    <span class="hljs-keyword">if</span> (up)
+      checkVersion();
+    <span class="hljs-keyword">else</span> {
+      log(<span class="hljs-string">'starting server...'</span>);
+      pult.spawnServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> </span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+        checkVersion();
+      });
+    }
   });
 }</pre></div></div>
             
@@ -456,24 +458,21 @@ not match.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h3 id="get-ports">Get Ports</h3>
-<p>Get the port number assigned to the domain name if there is a server to run
-(in <code>argv</code> or with <code>--static</code>). Otherwise, list all Pult domains and ports.</p>
+              <h3 id="check-version">Check Version</h3>
+<p>Check the version of the running Pult server and output a warning if it does
+not match.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPorts</span><span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">if</span> (argv.length || options.static) {
-    pult.getPort(options.name, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> {</span>
-      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
-      log(<span class="hljs-string">'http://'</span> + domain, <span class="hljs-string">'--&gt;'</span>, <span class="hljs-string">'http://localhost:'</span> + port);
-      spawnServer(port);
-    });
-  } <span class="hljs-keyword">else</span> {
-    pult.getPorts(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, ports)</span> {</span>
-      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
-      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> domain <span class="hljs-keyword">in</span> ports) {
-        <span class="hljs-keyword">var</span> port = ports[domain];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkVersion</span><span class="hljs-params">()</span> </span>{
+  pult.serverVersion(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, serverVersion, clientVersion)</span> </span>{
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+    <span class="hljs-keyword">if</span> (serverVersion != clientVersion)
+      log(<span class="hljs-string">'warning: server version'</span>, serverVersion, <span class="hljs-string">'!='</span>,
+          <span class="hljs-string">'client version'</span>, clientVersion);
+    getPorts();
+  });
+}</pre></div></div>
             
         </li>
         
@@ -483,6 +482,34 @@ not match.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h3 id="get-ports">Get Ports</h3>
+<p>Get the port number assigned to the domain name if there is a server to run
+(in <code>argv</code> or with <code>--static</code>). Otherwise, list all Pult domains and ports.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPorts</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">if</span> (argv.length || options.static) {
+    pult.getPort(options.name, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+      log(<span class="hljs-string">'http://'</span> + domain, <span class="hljs-string">'--&gt;'</span>, <span class="hljs-string">'http://localhost:'</span> + port);
+      spawnServer(port);
+    });
+  } <span class="hljs-keyword">else</span> {
+    pult.getPorts(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, ports)</span> </span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> domain <span class="hljs-keyword">in</span> ports) {
+        <span class="hljs-keyword">var</span> port = ports[domain];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Do not display <code>next</code> as a link.</p>
 
@@ -494,11 +521,11 @@ not match.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Do not display pult.dev link.</p>
 
@@ -515,11 +542,11 @@ not match.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h3 id="spawn-server">Spawn Server</h3>
 <p>Spawn the server process or the static file server, passing the port number
@@ -527,7 +554,7 @@ to it using <code>options.method</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">spawnServer</span><span class="hljs-params">(port)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">spawnServer</span><span class="hljs-params">(port)</span> </span>{
   <span class="hljs-keyword">if</span> (options.static) {
     staticServer.listen(port);
   } <span class="hljs-keyword">else</span> {
@@ -540,17 +567,17 @@ to it using <code>options.method</code>.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Exit with the same code as the server process.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    serverProcess.on(<span class="hljs-string">'exit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code, signal)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    serverProcess.on(<span class="hljs-string">'exit'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code, signal)</span> </span>{
       process.exit(code);
     });
   }

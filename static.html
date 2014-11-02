@@ -87,8 +87,8 @@ well as files.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span><span class="hljs-params">()</span> {</span>
-  console.log(<span class="hljs-string">'[static]'</span>, <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">' '</span>));
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'[static]'</span>, <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">' '</span>));
 }</pre></div></div>
             
         </li>
@@ -106,7 +106,7 @@ response.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">writeStatus</span><span class="hljs-params">(status, headers)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">writeStatus</span><span class="hljs-params">(status, headers)</span> </span>{
   <span class="hljs-keyword">if</span> (!headers) headers = {};
   <span class="hljs-keyword">this</span>.logType = headers[<span class="hljs-string">'Content-Type'</span>] = <span class="hljs-string">'text/plain'</span>;
   <span class="hljs-keyword">this</span>.logLength = headers[<span class="hljs-string">'Content-Length'</span>] = http.STATUS_CODES[status].length;
@@ -130,7 +130,7 @@ request.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">end</span><span class="hljs-params">()</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">end</span><span class="hljs-params">()</span> </span>{
   <span class="hljs-keyword">this</span>._end();
   log(
     <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().toISOString(),
@@ -156,7 +156,7 @@ request.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> server = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> server = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -256,7 +256,7 @@ request.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> readStream = fs.createReadStream(filePath);
 
-  readStream.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span></pre></div></div>
+  readStream.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -331,7 +331,7 @@ directory.</p>
     <span class="hljs-keyword">return</span> res.end();
   });
 
-  readStream.on(<span class="hljs-string">'open'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fd)</span> {</span></pre></div></div>
+  readStream.on(<span class="hljs-string">'open'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fd)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -346,7 +346,7 @@ directory.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fs.fstat(fd, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, stats)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    fs.fstat(fd, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, stats)</span> </span>{
       <span class="hljs-keyword">if</span> (err) {
         res.writeStatus(<span class="hljs-number">500</span>);
         log(err.stack);
@@ -492,7 +492,7 @@ directory.</p>
   });
 });
 
-module.exports = server;</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = server;</pre></div></div>
             
         </li>
         

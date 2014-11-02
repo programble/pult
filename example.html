@@ -112,7 +112,7 @@ request.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> server = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> server = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req, res)</span> </span>{
   <span class="hljs-keyword">var</span> body = <span class="hljs-string">'Hello, World!'</span>;
   res.writeHead(<span class="hljs-number">200</span>, {
     <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'text/plain'</span>,
@@ -150,7 +150,7 @@ request.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> </span>{
     <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
             
         </li>
@@ -168,7 +168,7 @@ from it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (up) {
-      pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> {</span>
+      pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> </span>{
         <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
             
         </li>
@@ -199,7 +199,7 @@ from it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        console.log(<span class="hljs-string">'http://'</span> + domain);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'http://'</span> + domain);
       });</pre></div></div>
             
         </li>
@@ -233,7 +233,7 @@ environment variable or the default development port.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      console.log(<span class="hljs-string">'http://localhost:'</span> + port);
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'http://localhost:'</span> + port);
     }
   });</pre></div></div>
             
@@ -282,11 +282,11 @@ server, it is possible to automatically start it before your server starts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startServer</span><span class="hljs-params">()</span> {</span>
-  pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> {</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startServer</span><span class="hljs-params">()</span> </span>{
+  pult.getPort(SERVER_NAME, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, port, domain)</span> </span>{
     <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
     server.listen(port);
-    console.log(<span class="hljs-string">'http://'</span> + domain);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'http://'</span> + domain);
   });
 }</pre></div></div>
             
@@ -303,7 +303,7 @@ server, it is possible to automatically start it before your server starts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> {</span>
+            <div class="content"><div class='highlight'><pre>pult.serverStatus(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, up)</span> </span>{
   <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
             
         </li>
@@ -336,7 +336,7 @@ server, it is possible to automatically start it before your server starts.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  } <span class="hljs-keyword">else</span> {
-    pult.spawnServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> {</span>
+    pult.spawnServer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span> </span>{
       <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;</pre></div></div>
             
         </li>
