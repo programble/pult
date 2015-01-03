@@ -423,8 +423,9 @@ is found.</p>
               </div>
               <h3 id="dns-server">DNS Server</h3>
 <p>Respond to <code>A</code> or <code>ANY</code> questions for domains with assigned ports with an
-<code>A</code> record pointing to the host of the HTTP server. Respond to all other
-questions with <code>NOTIMP</code>.</p>
+<code>A</code> record pointing to the host of the HTTP server. Respond with <code>NXDOMAIN</code>
+for domains without assigned ports. Respond to all other questions with
+<code>NOTIMP</code>.</p>
 
             </div>
             
@@ -433,15 +434,20 @@ dnsServer.on(<span class="hljs-string">'request'</span>, <span class="hljs-funct
   <span class="hljs-keyword">var</span> name = req.question[<span class="hljs-number">0</span>].name;
   <span class="hljs-keyword">var</span> type = dns.consts.QTYPE_TO_NAME[req.question[<span class="hljs-number">0</span>].type];
 
-  <span class="hljs-keyword">if</span> ((type == <span class="hljs-string">'A'</span> || type == <span class="hljs-string">'ANY'</span>) &amp;&amp; ports.get(name)) {
-    res.answer.push(dns.A({
-      name: name,
-      address: options.listenHost,
-      ttl: <span class="hljs-number">600</span>
-    }));
+  <span class="hljs-keyword">if</span> (type == <span class="hljs-string">'A'</span> || type == <span class="hljs-string">'ANY'</span>) {
+    <span class="hljs-keyword">if</span> (ports.get(name)) {
+      res.answer.push(dns.A({
+        name: name,
+        address: options.listenHost,
+        ttl: <span class="hljs-number">600</span>
+      }));
+    } <span class="hljs-keyword">else</span> {
+      res.header.rcode = dns.consts.NAME_TO_RCODE.NOTFOUND;
+    }
   } <span class="hljs-keyword">else</span> {
     res.header.rcode = dns.consts.NAME_TO_RCODE.NOTIMP;
   }
+
   res.send();
 });</pre></div></div>
             
