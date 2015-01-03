@@ -157,23 +157,29 @@ var ports = {
 // ### DNS Server
 //
 // Respond to `A` or `ANY` questions for domains with assigned ports with an
-// `A` record pointing to the host of the HTTP server. Respond to all other
-// questions with `NOTIMP`.
+// `A` record pointing to the host of the HTTP server. Respond with `NXDOMAIN`
+// for domains without assigned ports. Respond to all other questions with
+// `NOTIMP`.
 //
 var dnsServer = dns.createServer();
 dnsServer.on('request', function(req, res) {
   var name = req.question[0].name;
   var type = dns.consts.QTYPE_TO_NAME[req.question[0].type];
 
-  if ((type == 'A' || type == 'ANY') && ports.get(name)) {
-    res.answer.push(dns.A({
-      name: name,
-      address: options.listenHost,
-      ttl: 600
-    }));
+  if (type == 'A' || type == 'ANY') {
+    if (ports.get(name)) {
+      res.answer.push(dns.A({
+        name: name,
+        address: options.listenHost,
+        ttl: 600
+      }));
+    } else {
+      res.header.rcode = dns.consts.NAME_TO_RCODE.NOTFOUND;
+    }
   } else {
     res.header.rcode = dns.consts.NAME_TO_RCODE.NOTIMP;
   }
+
   res.send();
 });
 
