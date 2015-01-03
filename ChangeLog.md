@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.1.1 (2015-01-02)
+
+ * Respond to `A` record questions for unassigned domains with
+   `NXDOMAIN`
+
 ## 2.1.0 (2014-11-01)
 
  * Add `.pultrc` support
