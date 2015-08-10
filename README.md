@@ -1,4 +1,8 @@
-# Pult [![NPM version](https://badge.fury.io/js/pult.png)](http://badge.fury.io/js/pult)
+# Pult
+
+[![npm](https://img.shields.io/npm/v/pult.svg)][npm]
+
+[npm]: https://npmjs.com/package/pult
 
 Access local servers on .dev domains.
 
