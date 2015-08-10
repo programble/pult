@@ -6,177 +6,124 @@
 
 Access local servers on .dev domains.
 
-View the [documentation](http://cmcenroe.me/pult) for more detailed
-information.
+Pult makes local app servers available on `.dev` domains by running a local DNS
+server and HTTP reverse-proxy.
 
-## How do I get it?
+## Install
 
-```
-npm install pult
-```
-
-## How do I use it?
-
-Pult can either be used as a library from within your Node HTTP app, or
-from the command line for use with other HTTP servers.
-
-### As a Library
-
-See the [library documentation](http://cmcenroe.me/pult/index.html) for
-more information.
-
-```js
-var pult = require('pult');
-var http = require('http');
-
-var server = http.createServer();
-
-pult.getPort('my-app', function(err, port, domain) {
-  if (err) throw err;
-  server.listen(port);
-  console.log('http://' + domain); // http://my-app.dev
-});
-```
-
-This example assumes that the Pult server is running. For more detailed
-examples and better practices, see the [example
-documentation](http://cmcenroe.me/pult/example.html).
-
-### From the Command Line
-
-```
+```sh
 npm install -g pult
 ```
 
-Running `pult` from the command line automatically spawns `pult-server`
-if it is not already running.
+## Usage
 
 ```sh
+node-project $ pult npm start # http://node-project.dev
 ruby-project $ pult rackup # http://ruby-project.dev
-other-project $ pult foreman start # http://other-project.dev
+jekyll-site $ pult -P jekyll serve # http://jekyll-site.dev
+static-site $ pult -s # http://static-site.dev
 ```
 
-By default, Pult sets the `PORT` environment variable then spawns your
-server process. If your server process takes a port using the `-p` or
-`-P` options rather than through `PORT`, simply pass the required option
-to Pult:
+Pult will first launch its server if it is not already running, then launch the
+app server.
+
+By default, Pult passes the port to the server process through the `PORT`
+environment variable. Passing `--port`, `-p` or `-P` passes the port through the
+corresponding option (required for Jekyll).
+
+For static sites, the `-s` option starts a static HTTP server in the current
+directory.
+
+### Domains
+
+Pult by default serves the app from a `.dev` domain of the current directory.
+This can be changed with the `-n` option:
 
 ```sh
-website $ pult -P jekyll serve # http://website.dev
+pult -n example # http://example.dev
 ```
 
-For more details about the command line implementation, see the [command
-line documentation](http://cmcenroe.me/pult/pult.html).
+Pult also serves the app on any subdomain of the `.dev` domain. To serve
+different apps on subdomains, pass the subdomain with `-n`.
 
-#### Custom domains
+### Configuration
 
-By default, Pult uses the name of the current directory to determine
-what `.dev` domain to serve from. You can specify a different domain
-using the `-n` option:
+Command line options can be saved in `.pultrc` files that will be read from the
+current directory.
 
 ```sh
-node-project $ pult -n my-project node app # http://my-project.dev
+echo "-n example npm start" > .pultrc
+pult # http://example.dev
 ```
 
-#### Subdomains
+### Status
 
-Pult also serves the same application on all subdomains of its `.dev`
-domain. For example, `node-project` will be available at
-`http://node-project.dev`, `http://www.node-project.dev`, etc.
+Invoking `pult` with no arguments lists the domains Pult is serving and the
+local ports they are being forwarded to.
 
-Pult also allows you to serve different applications on subdomains
-simply by specifying the subdomain with `-n`:
-
-```sh
-other-project $ pult -n other.project node app # http://other.project.dev
 ```
-
-#### Configuration
-
-Pult interprets the contents of `.pultrc` in the current directory as
-command-line arguments. This allows saving the domain name and command
-to run so that bringing a server up on a `.dev` domain is as simple as
-running `pult`.
-
-```sh
-node-project $ echo "-n my-project node app" > .pultrc
-node-project $ pult # node app on http://my-project.dev
-```
-
-#### Status
-
-To find out which domains are being forwarded to which ports, simply run
-`pult` with no arguments:
-
-```sh
-~ $ pult
 [pult] next: 7003
-[pult] http://node-project.dev --> http://localhost:7001
-[pult] http://ruby-project.dev --> http://localhost:7002
+[pult] http://example.dev --> http://localhost:7001
+[pult] http://static.dev --> http://localhost:7002
 ```
-
-#### Output
-
-`pult` logs to standard error prefixed with `[pult]`. To disable
-logging, pass the `-q` option.
 
 ### Server
 
-By default, `pult-server` respawns itself with sudo then forks to the
-background. To run `pult-server` as a foreground process, pass the `-f`
-option:
+The Pult Server consists of a DNS server for resolving `.dev` domains and an
+HTTP server to reverse-proxy the `.dev` domains to app servers.
+
+`pult` will launch `pult-server` automatically, but it can also be run manually.
+
+The default behavior is for `pult-server` to respawn itself with `sudo`, then
+fork to the background. To run `pult-server` in the foreground, pass `-f`.
 
 ```sh
-~ $ pult-server -f
+pult-server -f
 ```
 
-To stop `pult-server` while it is running in the background, pass the
-`-k` option to `pult`:
+To stop `pult-server` while it is in the background, pass `-k` to `pult`.
 
 ```sh
-~ $ pult-server
-~ $ pult -k
+pult-server
+pult -k
 ```
 
-The default first port that `pult-server` assigns is 7001. To change
-this port, pass the `-p` option:
+The default first port that `pult-server` assigns is 7001. This can be changed
+by passing `-p`.
 
 ```sh
-~ $ pult-server -p 8081
-~ $ pult
-[pult] next: 8081
+pult-server -p 8081
 ```
 
-By default, `pult-server` binds to ports 53 (DNS) and 80 (HTTP) on
-`127.0.0.1` (IPv4 localhost). If you are already running these services
-on `127.0.0.1` and are using a system that allows the use of the entire
-`127.0.0.0/8` range, you can pass the `-l` option to change which host
-`pult-server` binds to:
+The default bind address of `pult-server` for both DNS (port 53) and HTTP (port
+80) is `127.0.0.1`. A different address can be passed with the `-l` option.
 
 ```sh
-~ $ pult-server -l 127.1.1.1
+pult-server -l 127.1.1.1
 ```
 
-For more details on the server implementation, see the [server
-documentation](http://cmcenroe.me/pult/server.html).
+### Library
+
+Pult can be used as a Node.js library. See the [documentation][docs].
+
+[docs]: https://cmcenroe.me/pult
+
+## Compatibility
+
+- Linux, through `/etc/resolv.conf`
+- OS X, through `/etc/resolver`
 
 ## Similar projects
 
 * [Pow](http://pow.cx/)
   * Advantages:
-    * Runs as regular user
-    * Allows serving the same application from multiple domains (not
-      just subdomains)
+    * No `sudo` required
+    * Serves the same app on multiple domains
   * Disadvantages:
-    * OS X only
+    * OS X-specific
     * Rack-specific
-    * Requires symlinking (explicit setup)
-    * Takes over control of your server processes
-
-## Compatibility
-
-Pult is compatible with Linux systems using `/etc/resolv.conf` and with
-Mac OS X using `/etc/resolver`.
+    * Explicit setup (through symlinks)
+    * No control over app server processes
 
 ## License
 
