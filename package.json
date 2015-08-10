@@ -1,6 +1,6 @@
 {
   "name": "pult",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Access local servers on .dev domains",
   "keywords": [
     "local",
